@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SEO & Digital Marketing Hub</title>
+<style>
+/* ═══════════════════════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════════════════════ */
+:root {
+  --navy:    #0D1B2A;
+  --blue:    #1B4F72;
+  --accent:  #2980B9;
+  --light:   #D6EAF8;
+  --white:   #FFFFFF;
+  --gray-50: #F8F9FA;
+  --gray-100:#F2F3F4;
+  --gray-300:#BDC3C7;
+  --gray-500:#7F8C8D;
+  --gray-700:#2C3E50;
+  --green:   #1E8449;
+  --ltgreen: #D5F5E3;
+  --red:     #C0392B;
+  --ltred:   #FADBD8;
+  --orange:  #E67E22;
+  --ltorange:#FDEBD0;
+  --yellow:  #F1C40F;
+  --ltyellow:#FEF9E7;
+  --purple:  #7D3C98;
+  --ltpurple:#E8DAEF;
+
+  --sidebar-w: 240px;
+  --header-h:  60px;
+  --radius:    10px;
+  --shadow:    0 2px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.14);
+  --transition: 0.2s ease;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; scroll-behavior: smooth; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--gray-50);
+  color: var(--gray-700);
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+button { cursor: pointer; font-family: inherit; border: none; background: none; }
+input, textarea, select { font-family: inherit; }
+a { color: var(--accent); text-decoration: none; }
+
+/* ═══════════════════════════════════════════════════════════
+   LAYOUT SHELL
+═══════════════════════════════════════════════════════════ */
+.app-shell { display: flex; min-height: 100vh; }
+
+/* ── Sidebar ── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--navy);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  z-index: 100;
+  transition: transform var(--transition);
+  overflow-y: auto;
+}
+.sidebar-logo {
+  padding: 20px 20px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.sidebar-logo .logo-icon {
+  width: 38px; height: 38px;
+  background: var(--accent);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; margin-bottom: 10px;
+}
+.sidebar-logo h2 {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  line-height: 1.3;
+}
+.sidebar-logo p { color: var(--gray-300); font-size: 11px; margin-top: 2px; }
+
+.sidebar-nav { flex: 1; padding: 16px 0; }
+.nav-section-label {
+  color: var(--gray-500);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 8px 20px 4px;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 20px;
+  color: rgba(255,255,255,0.7);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: all var(--transition);
+  border-radius: 0 8px 8px 0;
+  margin: 2px 12px 2px 0;
+}
+.nav-item:hover { color: #fff; background: rgba(255,255,255,0.07); }
+.nav-item.active {
+  color: #fff;
+  background: rgba(41,128,185,0.25);
+  border-left-color: var(--accent);
+}
+.nav-item .nav-icon { font-size: 17px; width: 22px; text-align: center; flex-shrink: 0; }
+.nav-badge {
+  margin-left: auto;
+  background: var(--red);
+  color: #fff;
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.sidebar-footer p { color: var(--gray-500); font-size: 11px; }
+.sidebar-footer strong { color: rgba(255,255,255,0.6); font-size: 11px; }
+
+/* ── Main content ── */
+.main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.topbar {
+  height: var(--header-h);
+  background: #fff;
+  border-bottom: 1px solid var(--gray-100);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 12px;
+  position: sticky; top: 0; z-index: 50;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.hamburger {
+  display: none;
+  font-size: 20px;
+  color: var(--navy);
+  padding: 6px;
+  border-radius: 6px;
+}
+.topbar-title h1 { font-size: 17px; font-weight: 700; color: var(--navy); }
+.topbar-title p  { font-size: 12px; color: var(--gray-500); }
+.topbar-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.topbar-date {
+  background: var(--gray-100);
+  color: var(--gray-500);
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+.topbar-client {
+  background: var(--light);
+  color: var(--blue);
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.page-content {
+  flex: 1;
+  padding: 28px 28px 60px;
+}
+.section { display: none; }
+.section.active { display: block; }
+
+/* ── Mobile bottom nav overlay ── */
+.sidebar-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 99;
+}
+.bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--navy);
+  padding: 8px 0 env(safe-area-inset-bottom);
+  z-index: 200;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.bottom-nav-inner {
+  display: flex;
+  justify-content: space-around;
+}
+.bnav-item {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 3px; padding: 4px 12px;
+  color: rgba(255,255,255,0.5);
+  font-size: 10px; font-weight: 500;
+  cursor: pointer; border-radius: 8px;
+  transition: color var(--transition);
+  min-width: 60px;
+}
+.bnav-item .bnav-icon { font-size: 20px; }
+.bnav-item.active { color: var(--accent); }
+
+/* ═══════════════════════════════════════════════════════════
+   COMMON COMPONENTS
+═══════════════════════════════════════════════════════════ */
+.section-header { margin-bottom: 24px; }
+.section-header h2 {
+  font-size: 22px; font-weight: 700; color: var(--navy);
+  display: flex; align-items: center; gap: 10px;
+}
+.section-header p { color: var(--gray-500); font-size: 13px; margin-top: 4px; }
+
+.card {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+.card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--gray-100);
+}
+.card-header h3 { font-size: 14px; font-weight: 700; color: var(--navy); display: flex; align-items: center; gap: 8px; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.grid-auto { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+
+.badge {
+  display: inline-flex; align-items: center;
+  padding: 3px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 600;
+}
+.badge-green  { background: var(--ltgreen);  color: var(--green); }
+.badge-red    { background: var(--ltred);    color: var(--red); }
+.badge-orange { background: var(--ltorange); color: var(--orange); }
+.badge-blue   { background: var(--light);    color: var(--blue); }
+.badge-purple { background: var(--ltpurple); color: var(--purple); }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: 8px;
+  font-size: 13px; font-weight: 600;
+  transition: all var(--transition);
+}
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--blue); }
+.btn-outline { border: 1.5px solid var(--gray-300); color: var(--gray-700); }
+.btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+.btn-sm { padding: 5px 12px; font-size: 12px; }
+.btn-danger { background: var(--ltred); color: var(--red); }
+
+.progress-bar-wrap { background: var(--gray-100); border-radius: 10px; height: 8px; overflow: hidden; }
+.progress-bar { height: 100%; border-radius: 10px; transition: width 0.6s ease; }
+
+.tag {
+  display: inline-flex; padding: 2px 8px; border-radius: 4px;
+  font-size: 11px; font-weight: 600;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   1. SEO DASHBOARD
+═══════════════════════════════════════════════════════════ */
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 24px; }
+.kpi-card {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 16px;
+  border-top: 4px solid var(--accent);
+  position: relative; overflow: hidden;
+}
+.kpi-card::after {
+  content: '';
+  position: absolute; right: -10px; bottom: -10px;
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  background: var(--gray-100);
+}
+.kpi-icon { font-size: 22px; margin-bottom: 8px; }
+.kpi-value { font-size: 28px; font-weight: 800; color: var(--navy); line-height: 1; }
+.kpi-label { font-size: 12px; color: var(--gray-500); margin: 4px 0 6px; font-weight: 500; }
+.kpi-trend { font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+.kpi-trend.up   { color: var(--green); }
+.kpi-trend.down { color: var(--red); }
+.kpi-trend.flat { color: var(--orange); }
+
+.kpi-card.kpi-green  { border-top-color: var(--green); }
+.kpi-card.kpi-red    { border-top-color: var(--red); }
+.kpi-card.kpi-orange { border-top-color: var(--orange); }
+.kpi-card.kpi-blue   { border-top-color: var(--accent); }
+.kpi-card.kpi-navy   { border-top-color: var(--navy); }
+
+.audit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.audit-item {
+  background: #fff; border-radius: var(--radius); padding: 16px;
+  box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 8px;
+}
+.audit-item-header {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.audit-item-header span { font-size: 13.5px; font-weight: 600; color: var(--navy); }
+.audit-score { font-size: 15px; font-weight: 800; }
+.score-high { color: var(--green); }
+.score-mid  { color: var(--orange); }
+.score-low  { color: var(--red); }
+.audit-meta { display: flex; align-items: center; justify-content: space-between; }
+.audit-meta small { font-size: 11px; color: var(--gray-500); }
+
+.issues-list { display: flex; flex-direction: column; gap: 10px; }
+.issue-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px; background: var(--gray-50);
+  border-left: 4px solid transparent;
+}
+.issue-item.critical { border-left-color: var(--red); background: var(--ltred); }
+.issue-item.high     { border-left-color: var(--orange); background: var(--ltorange); }
+.issue-item.medium   { border-left-color: var(--yellow); background: var(--ltyellow); }
+.issue-item .issue-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.issue-item h4 { font-size: 13px; font-weight: 600; color: var(--navy); }
+.issue-item p  { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+
+.cwv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.cwv-card {
+  background: #fff; border-radius: var(--radius); padding: 16px;
+  box-shadow: var(--shadow); text-align: center;
+}
+.cwv-metric { font-size: 11px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.5px; }
+.cwv-value { font-size: 26px; font-weight: 800; margin: 8px 0 4px; }
+.cwv-threshold { font-size: 11px; color: var(--gray-500); }
+.cwv-pass  { color: var(--green); }
+.cwv-warn  { color: var(--orange); }
+.cwv-fail  { color: var(--red); }
+.cwv-label { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-top: 4px; }
+.cwv-label.pass { background: var(--ltgreen); color: var(--green); }
+.cwv-label.warn { background: var(--ltorange); color: var(--orange); }
+.cwv-label.fail { background: var(--ltred);   color: var(--red); }
+
+/* ═══════════════════════════════════════════════════════════
+   2. CONTENT CALENDAR
+═══════════════════════════════════════════════════════════ */
+.calendar-controls {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+}
+.calendar-nav {
+  display: flex; align-items: center; gap: 8px;
+}
+.cal-btn {
+  width: 34px; height: 34px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  background: #fff; border: 1.5px solid var(--gray-300);
+  font-size: 16px; color: var(--navy); cursor: pointer;
+  transition: all var(--transition);
+}
+.cal-btn:hover { border-color: var(--accent); color: var(--accent); }
+.cal-month-label { font-size: 18px; font-weight: 700; color: var(--navy); min-width: 160px; text-align: center; }
+.platform-filters { display: flex; gap: 6px; flex-wrap: wrap; }
+.plat-filter {
+  padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 600;
+  cursor: pointer; border: 1.5px solid transparent;
+  transition: all var(--transition);
+}
+.plat-filter.active { border-color: currentColor; }
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+.cal-day-header {
+  text-align: center; font-size: 11px; font-weight: 700;
+  color: var(--gray-500); padding: 6px 0;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.cal-day {
+  min-height: 100px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  cursor: pointer;
+  transition: all var(--transition);
+  border: 2px solid transparent;
+  position: relative;
+}
+.cal-day:hover { border-color: var(--accent); box-shadow: var(--shadow); }
+.cal-day.empty { background: var(--gray-50); box-shadow: none; cursor: default; }
+.cal-day.has-content { }
+.cal-day.today { border-color: var(--accent); }
+.cal-day-num {
+  font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 4px;
+}
+.cal-day.today .cal-day-num {
+  background: var(--accent); color: #fff; width: 22px; height: 22px;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+}
+.cal-post-pill {
+  font-size: 10px; font-weight: 600; border-radius: 4px;
+  padding: 2px 6px; margin-bottom: 3px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  display: block;
+}
+
+/* Platform pill colors */
+.pill-instagram { background: #FFF0E6; color: #E4405F; }
+.pill-linkedin  { background: #E8F4FF; color: #0077B5; }
+.pill-twitter   { background: #E8FFF4; color: #1DA1F2; }
+.pill-facebook  { background: #EEE8F9; color: #1877F2; }
+.pill-blog      { background: #FFF9E0; color: #E67E22; }
+.pill-email     { background: #FFEAED; color: #C0392B; }
+.pill-youtube   { background: #FFE8E8; color: #FF0000; }
+
+/* Post detail modal */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.5); align-items: center; justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: #fff; border-radius: 16px; width: 100%; max-width: 560px;
+  box-shadow: var(--shadow-lg); overflow: hidden;
+  max-height: 90vh; display: flex; flex-direction: column;
+}
+.modal-header {
+  padding: 20px 24px; display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--gray-100); flex-shrink: 0;
+}
+.modal-header h3 { font-size: 16px; font-weight: 700; color: var(--navy); }
+.modal-close {
+  width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 18px; color: var(--gray-500);
+  background: var(--gray-100); cursor: pointer;
+  transition: all var(--transition);
+}
+.modal-close:hover { background: var(--ltred); color: var(--red); }
+.modal-body { padding: 24px; overflow-y: auto; flex: 1; }
+.modal-field { margin-bottom: 16px; }
+.modal-field label { display: block; font-size: 12px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.modal-field input, .modal-field textarea, .modal-field select {
+  width: 100%; padding: 10px 12px; border-radius: 8px;
+  border: 1.5px solid var(--gray-300); font-size: 13px; color: var(--navy);
+  transition: border-color var(--transition);
+}
+.modal-field input:focus, .modal-field textarea:focus, .modal-field select:focus {
+  outline: none; border-color: var(--accent);
+}
+.modal-field textarea { resize: vertical; min-height: 80px; }
+.modal-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.modal-footer { padding: 16px 24px; border-top: 1px solid var(--gray-100); display: flex; gap: 10px; justify-content: flex-end; flex-shrink: 0; }
+
+/* ═══════════════════════════════════════════════════════════
+   3. DAILY TASK LOOP
+═══════════════════════════════════════════════════════════ */
+.task-progress-bar-wrap {
+  background: #fff; border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+.task-progress-header {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
+}
+.task-progress-header h3 { font-size: 15px; font-weight: 700; color: var(--navy); }
+.task-pct { font-size: 24px; font-weight: 800; color: var(--accent); }
+.task-steps-ribbon { display: flex; gap: 6px; margin-top: 16px; flex-wrap: wrap; }
+.step-bubble {
+  display: flex; align-items: center; gap: 6px; padding: 6px 14px;
+  border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer;
+  border: 2px solid transparent; transition: all var(--transition);
+}
+.step-bubble.done      { background: var(--ltgreen); color: var(--green); }
+.step-bubble.active    { background: var(--light);   color: var(--blue); border-color: var(--accent); }
+.step-bubble.pending   { background: var(--gray-100); color: var(--gray-500); }
+
+.step-panels { display: flex; flex-direction: column; gap: 16px; }
+.step-panel {
+  background: #fff; border-radius: var(--radius); box-shadow: var(--shadow);
+  overflow: hidden; border: 2px solid transparent;
+  transition: border-color var(--transition);
+}
+.step-panel.active { border-color: var(--accent); }
+.step-panel-header {
+  display: flex; align-items: center; gap: 14px; padding: 16px 20px;
+  cursor: pointer; background: var(--gray-50);
+  border-bottom: 1px solid var(--gray-100);
+}
+.step-panel.active .step-panel-header { background: var(--light); }
+.step-num {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800;
+}
+.step-num.done    { background: var(--green); color: #fff; }
+.step-num.active  { background: var(--accent); color: #fff; }
+.step-num.pending { background: var(--gray-300); color: #fff; }
+.step-panel-meta { flex: 1; }
+.step-panel-meta h4 { font-size: 14px; font-weight: 700; color: var(--navy); }
+.step-panel-meta p  { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+.step-time-badge {
+  background: var(--navy); color: var(--gray-300); font-size: 11px;
+  padding: 4px 10px; border-radius: 20px; font-weight: 600;
+}
+.step-panel-body { padding: 20px; display: none; }
+.step-panel.active .step-panel-body,
+.step-panel.expanded .step-panel-body { display: block; }
+
+.task-checklist { display: flex; flex-direction: column; gap: 8px; }
+.task-check-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 10px 14px; border-radius: 8px; background: var(--gray-50);
+  transition: all var(--transition); cursor: pointer;
+}
+.task-check-item:hover { background: var(--light); }
+.task-check-item.checked { opacity: 0.6; text-decoration: line-through; }
+.task-check-item input[type=checkbox] {
+  width: 17px; height: 17px; margin-top: 2px; flex-shrink: 0;
+  accent-color: var(--accent); cursor: pointer;
+}
+.task-check-item .check-text { font-size: 13px; color: var(--navy); flex: 1; line-height: 1.4; }
+.task-check-item .check-tag  { flex-shrink: 0; }
+.step-action-row { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+
+.escalation-box {
+  background: var(--ltred); border: 1.5px solid var(--red);
+  border-radius: 8px; padding: 12px 16px; margin-top: 12px;
+}
+.escalation-box p { font-size: 12px; color: var(--red); font-weight: 600; }
+
+.notes-area {
+  width: 100%; min-height: 80px; padding: 10px;
+  border: 1.5px solid var(--gray-300); border-radius: 8px;
+  font-size: 13px; resize: vertical; margin-top: 12px;
+  transition: border-color var(--transition);
+}
+.notes-area:focus { outline: none; border-color: var(--accent); }
+
+/* ═══════════════════════════════════════════════════════════
+   4. KEYWORD & RANKINGS TRACKER
+═══════════════════════════════════════════════════════════ */
+.tracker-toolbar {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;
+}
+.search-input-wrap { position: relative; flex: 1; min-width: 200px; }
+.search-input-wrap .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--gray-500); font-size: 16px; pointer-events: none; }
+.search-input {
+  width: 100%; padding: 9px 12px 9px 36px; border-radius: 8px;
+  border: 1.5px solid var(--gray-300); font-size: 13px;
+  transition: border-color var(--transition);
+}
+.search-input:focus { outline: none; border-color: var(--accent); }
+
+.table-wrap { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table thead th {
+  background: var(--navy); color: var(--gray-300);
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+  padding: 12px 14px; text-align: left; white-space: nowrap; cursor: pointer;
+  user-select: none; transition: color var(--transition);
+}
+.data-table thead th:hover { color: #fff; }
+.data-table thead th.sorted { color: var(--accent); }
+.data-table tbody tr {
+  border-bottom: 1px solid var(--gray-100);
+  transition: background var(--transition);
+}
+.data-table tbody tr:hover { background: var(--gray-50); }
+.data-table tbody tr:last-child { border-bottom: none; }
+.data-table td { padding: 11px 14px; font-size: 13px; color: var(--navy); vertical-align: middle; }
+
+.diff-pill {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 38px; height: 22px; border-radius: 20px; font-size: 11px; font-weight: 700;
+}
+.diff-easy { background: var(--ltgreen);  color: var(--green); }
+.diff-med  { background: var(--ltyellow); color: #7D6608; }
+.diff-hard { background: var(--ltred);    color: var(--red); }
+
+.rank-chip {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 32px; height: 24px; border-radius: 6px; font-size: 12px; font-weight: 700; padding: 0 6px;
+}
+.rank-top3  { background: #FDEBD0; color: #D35400; }
+.rank-top10 { background: var(--ltgreen); color: var(--green); }
+.rank-top20 { background: var(--light); color: var(--blue); }
+.rank-low   { background: var(--gray-100); color: var(--gray-500); }
+.rank-none  { background: var(--gray-100); color: var(--gray-500); font-size: 10px; }
+
+.trend-arrow { font-size: 16px; font-weight: 700; }
+.trend-up   { color: var(--green); }
+.trend-down { color: var(--red); }
+.trend-flat { color: var(--gray-500); }
+.trend-new  { color: var(--accent); font-size: 11px; font-weight: 700; }
+
+.intent-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; }
+.intent-info  { background: #EEF2FF; color: #3730A3; }
+.intent-trans { background: #D1FAE5; color: #065F46; }
+.intent-comm  { background: #FEF3C7; color: #92400E; }
+.intent-nav   { background: #FCE7F3; color: #9D174D; }
+.intent-local { background: #E0E7FF; color: #4338CA; }
+
+.kw-add-form {
+  background: #fff; border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow);
+  margin-top: 16px; border: 2px dashed var(--gray-300); display: none;
+}
+.kw-add-form.open { display: block; border-color: var(--accent); }
+.kw-form-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 10px; margin-bottom: 12px;
+}
+.form-input {
+  padding: 8px 10px; border-radius: 6px; border: 1.5px solid var(--gray-300);
+  font-size: 13px; width: 100%;
+  transition: border-color var(--transition);
+}
+.form-input:focus { outline: none; border-color: var(--accent); }
+
+.table-empty {
+  text-align: center; padding: 40px; color: var(--gray-500); font-size: 14px;
+}
+
+/* Summary stats row */
+.tracker-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.tracker-stat {
+  background: #fff; border-radius: var(--radius); padding: 14px 16px;
+  box-shadow: var(--shadow); text-align: center;
+}
+.tracker-stat .ts-val { font-size: 22px; font-weight: 800; color: var(--navy); }
+.tracker-stat .ts-lbl { font-size: 11px; color: var(--gray-500); font-weight: 500; margin-top: 2px; }
+
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE — MOBILE
+═══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay.open { display: block; }
+  .main { margin-left: 0; }
+  .hamburger { display: flex; }
+  .bottom-nav { display: block; }
+  .page-content { padding: 16px 16px 80px; }
+
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .kpi-value { font-size: 22px; }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .audit-grid { grid-template-columns: 1fr; }
+  .cwv-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .cwv-value { font-size: 20px; }
+  .calendar-grid { gap: 3px; }
+  .cal-day { min-height: 64px; padding: 4px; }
+  .cal-day-num { font-size: 11px; }
+  .cal-post-pill { font-size: 9px; padding: 1px 4px; }
+  .cal-day-header { font-size: 10px; }
+  .data-table { font-size: 12px; }
+  .data-table td, .data-table thead th { padding: 9px 10px; }
+  .kw-form-grid { grid-template-columns: 1fr 1fr; }
+  .topbar-date { display: none; }
+  .tracker-toolbar { flex-direction: column; align-items: stretch; }
+  .modal-row { grid-template-columns: 1fr; }
+  .step-time-badge { display: none; }
+  .task-steps-ribbon { gap: 4px; }
+  .step-bubble { padding: 5px 10px; font-size: 11px; }
+}
+
+@media (max-width: 480px) {
+  .kpi-grid { grid-template-columns: 1fr 1fr; }
+  .cal-post-pill { display: none; }
+  .cal-day.has-content::after {
+    content: '●'; font-size: 8px; color: var(--accent);
+    position: absolute; bottom: 4px; right: 4px;
+  }
+  .platform-filters { display: none; }
+  .topbar-client { display: none; }
+  .section-header h2 { font-size: 18px; }
+}
+
+/* Print */
+@media print {
+  .sidebar, .bottom-nav, .topbar { display: none !important; }
+  .main { margin-left: 0 !important; }
+  .page-content { padding: 0 !important; }
+  .section { display: block !important; page-break-after: always; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SIDEBAR
+═══════════════════════════════════════════════════════════ -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">📈</div>
+    <h2>SEO & Marketing Hub</h2>
+    <p>Agency Command Center</p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+    <div class="nav-item active" onclick="navigate('dashboard', this)">
+      <span class="nav-icon">📊</span> SEO Dashboard
+    </div>
+    <div class="nav-item" onclick="navigate('calendar', this)">
+      <span class="nav-icon">📅</span> Content Calendar
+    </div>
+    <div class="nav-item" onclick="navigate('tasks', this)">
+      <span class="nav-icon">✅</span> Daily Task Loop
+      <span class="nav-badge" id="pendingBadge">5</span>
+    </div>
+    <div class="nav-item" onclick="navigate('keywords', this)">
+      <span class="nav-icon">🔑</span> Keyword Tracker
+    </div>
+
+    <div class="nav-section-label" style="margin-top:12px">Quick Actions</div>
+    <div class="nav-item" onclick="alert('Feature: Add a new keyword to track')">
+      <span class="nav-icon">➕</span> Add Keyword
+    </div>
+    <div class="nav-item" onclick="alert('Feature: Schedule a new post')">
+      <span class="nav-icon">📝</span> Schedule Post
+    </div>
+    <div class="nav-item" onclick="window.print()">
+      <span class="nav-icon">🖨️</span> Print Report
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <strong id="clientNameSidebar">elensAI Agency</strong>
+    <p id="sidebarDate"></p>
+  </div>
+</aside>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MAIN
+═══════════════════════════════════════════════════════════ -->
+<div class="main">
+  <header class="topbar">
+    <button class="hamburger" onclick="toggleSidebar()">☰</button>
+    <div class="topbar-title">
+      <h1 id="topbarTitle">SEO Dashboard</h1>
+      <p id="topbarSub">Your real-time agency performance overview</p>
+    </div>
+    <div class="topbar-actions">
+      <span class="topbar-date" id="topbarDate"></span>
+      <span class="topbar-client" onclick="editClientName()">👤 <span id="clientNameTop">elensAI</span></span>
+    </div>
+  </header>
+
+  <div class="page-content">
+
+    <!-- ══════════════════════════════════
+         SECTION 1: DASHBOARD
+    ══════════════════════════════════ -->
+    <div class="section active" id="sec-dashboard">
+      <div class="section-header">
+        <h2>📊 SEO Dashboard</h2>
+        <p>Real-time overview of your agency's SEO performance and health metrics.</p>
+      </div>
+
+      <!-- KPI Row -->
+      <div class="kpi-grid" id="kpiGrid">
+        <!-- populated by JS -->
+      </div>
+
+      <!-- Audit Scores + CWV -->
+      <div class="grid-2" style="margin-bottom:20px">
+        <div class="card">
+          <div class="card-header">
+            <h3>🧪 Audit Category Scores</h3>
+            <button class="btn btn-outline btn-sm" onclick="alert('Recalculate scores from latest audit data')">Refresh</button>
+          </div>
+          <div class="audit-grid" id="auditScores" style="gap:10px;margin-bottom:0"></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>⚡ Core Web Vitals</h3>
+            <span class="badge badge-red">Action Needed</span>
+          </div>
+          <div class="cwv-grid">
+            <div class="cwv-card">
+              <div class="cwv-metric">LCP</div>
+              <div class="cwv-value cwv-fail">4.2s</div>
+              <div class="cwv-threshold">Target: &lt;2.5s</div>
+              <div class="cwv-label fail">FAIL</div>
+            </div>
+            <div class="cwv-card">
+              <div class="cwv-metric">CLS</div>
+              <div class="cwv-value cwv-warn">0.12</div>
+              <div class="cwv-threshold">Target: &lt;0.1</div>
+              <div class="cwv-label warn">WARN</div>
+            </div>
+            <div class="cwv-card">
+              <div class="cwv-metric">INP</div>
+              <div class="cwv-value cwv-pass">98ms</div>
+              <div class="cwv-threshold">Target: &lt;200ms</div>
+              <div class="cwv-label pass">PASS</div>
+            </div>
+          </div>
+          <div style="margin-top:16px">
+            <div class="escalation-box">
+              <p>⚠️ LCP failure is a direct ranking factor. Fix image sizes and enable browser caching immediately — this is a P0 issue.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Open Issues -->
+      <div class="card">
+        <div class="card-header">
+          <h3>🚨 Open Priority Issues</h3>
+          <span class="badge badge-red" id="issueCount">8 Open</span>
+        </div>
+        <div class="issues-list" id="issuesList"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════
+         SECTION 2: CONTENT CALENDAR
+    ══════════════════════════════════ -->
+    <div class="section" id="sec-calendar">
+      <div class="section-header">
+        <h2>📅 Content Calendar</h2>
+        <p>Plan and track all your content across platforms for the month.</p>
+      </div>
+
+      <div class="calendar-controls">
+        <div class="calendar-nav">
+          <button class="cal-btn" onclick="changeMonth(-1)">◀</button>
+          <div class="cal-month-label" id="calMonthLabel"></div>
+          <button class="cal-btn" onclick="changeMonth(1)">▶</button>
+        </div>
+        <div class="platform-filters" id="platformFilters"></div>
+        <button class="btn btn-primary btn-sm" onclick="openAddPost()">＋ Add Post</button>
+      </div>
+
+      <div class="calendar-grid" id="calendarGrid">
+        <!-- JS -->
+      </div>
+
+      <!-- Legend -->
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;padding:14px 18px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow)">
+        <span style="font-size:12px;font-weight:700;color:var(--gray-500);align-self:center">Platforms:</span>
+        <span class="cal-post-pill pill-instagram" style="font-size:11px">📸 Instagram</span>
+        <span class="cal-post-pill pill-linkedin"  style="font-size:11px">💼 LinkedIn</span>
+        <span class="cal-post-pill pill-twitter"   style="font-size:11px">🐦 Twitter/X</span>
+        <span class="cal-post-pill pill-facebook"  style="font-size:11px">📘 Facebook</span>
+        <span class="cal-post-pill pill-blog"      style="font-size:11px">✍️ Blog/SEO</span>
+        <span class="cal-post-pill pill-email"     style="font-size:11px">📧 Email</span>
+        <span class="cal-post-pill pill-youtube"   style="font-size:11px">▶️ YouTube</span>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════
+         SECTION 3: DAILY TASK LOOP
+    ══════════════════════════════════ -->
+    <div class="section" id="sec-tasks">
+      <div class="section-header">
+        <h2>✅ Daily Task Loop</h2>
+        <p>Your structured daily workflow as an L1 SEO & Digital Marketing Executive.</p>
+      </div>
+
+      <div class="task-progress-bar-wrap">
+        <div class="task-progress-header">
+          <div>
+            <h3>Today's Progress</h3>
+            <p style="font-size:12px;color:var(--gray-500);margin-top:2px" id="taskDate"></p>
+          </div>
+          <div class="task-pct" id="taskPct">0%</div>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" id="taskProgressBar" style="width:0%;background:var(--accent)"></div>
+        </div>
+        <div class="task-steps-ribbon" id="stepsRibbon"></div>
+      </div>
+
+      <div class="step-panels" id="stepPanels"></div>
+    </div>
+
+    <!-- ══════════════════════════════════
+         SECTION 4: KEYWORD TRACKER
+    ══════════════════════════════════ -->
+    <div class="section" id="sec-keywords">
+      <div class="section-header">
+        <h2>🔑 Keyword & Rankings Tracker</h2>
+        <p>Track, manage, and analyze all your target keywords and search positions.</p>
+      </div>
+
+      <div class="tracker-stats" id="trackerStats"></div>
+
+      <div class="tracker-toolbar">
+        <div class="search-input-wrap">
+          <span class="search-icon">🔍</span>
+          <input class="search-input" type="text" id="kwSearch" placeholder="Search keywords, URLs, or intent..." oninput="filterKeywords()"/>
+        </div>
+        <select class="form-input" id="kwFilter" onchange="filterKeywords()" style="width:auto;min-width:140px">
+          <option value="">All Intents</option>
+          <option value="Informational">Informational</option>
+          <option value="Transactional">Transactional</option>
+          <option value="Commercial">Commercial</option>
+          <option value="Local">Local</option>
+        </select>
+        <select class="form-input" id="kwSort" onchange="filterKeywords()" style="width:auto;min-width:140px">
+          <option value="volume">Sort: Volume</option>
+          <option value="rank">Sort: Rank</option>
+          <option value="diff">Sort: Difficulty</option>
+        </select>
+        <button class="btn btn-primary btn-sm" onclick="toggleAddForm()">＋ Add Keyword</button>
+      </div>
+
+      <!-- Add Form -->
+      <div class="kw-add-form" id="kwAddForm">
+        <h4 style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:12px">Add New Keyword</h4>
+        <div class="kw-form-grid">
+          <input class="form-input" id="newKw"     placeholder="Keyword phrase" />
+          <input class="form-input" id="newVol"    placeholder="Volume (e.g. 1200)" type="number"/>
+          <input class="form-input" id="newDiff"   placeholder="Difficulty (1-100)" type="number" min="1" max="100"/>
+          <select class="form-input" id="newIntent">
+            <option>Informational</option>
+            <option>Transactional</option>
+            <option>Commercial</option>
+            <option>Local</option>
+          </select>
+          <input class="form-input" id="newRank" placeholder="Current rank" type="number"/>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary btn-sm" onclick="addKeyword()">Add Keyword</button>
+          <button class="btn btn-outline btn-sm" onclick="toggleAddForm()">Cancel</button>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrap">
+        <div style="overflow-x:auto">
+          <table class="data-table" id="kwTable">
+            <thead>
+              <tr>
+                <th onclick="sortTable('kw')">Keyword ↕</th>
+                <th onclick="sortTable('volume')">Vol ↕</th>
+                <th onclick="sortTable('diff')">Diff ↕</th>
+                <th>Intent</th>
+                <th onclick="sortTable('rank')">Rank ↕</th>
+                <th>Target</th>
+                <th>Trend</th>
+                <th>URL</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="kwTableBody">
+              <!-- JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /page-content -->
+</div><!-- /main -->
+
+<!-- BOTTOM NAV (mobile) -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <div class="bnav-item active" onclick="navigate('dashboard', null, this)" id="bnav-dashboard">
+      <span class="bnav-icon">📊</span>Dashboard
+    </div>
+    <div class="bnav-item" onclick="navigate('calendar', null, this)" id="bnav-calendar">
+      <span class="bnav-icon">📅</span>Calendar
+    </div>
+    <div class="bnav-item" onclick="navigate('tasks', null, this)" id="bnav-tasks">
+      <span class="bnav-icon">✅</span>Tasks
+    </div>
+    <div class="bnav-item" onclick="navigate('keywords', null, this)" id="bnav-keywords">
+      <span class="bnav-icon">🔑</span>Keywords
+    </div>
+  </div>
+</nav>
+
+<!-- POST DETAIL MODAL -->
+<div class="modal-overlay" id="postModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">Post Details</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="savePost()">Save Post</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════════════ -->
+<script>
+// ─────────────────────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────────────────────
+let currentSection = 'dashboard';
+let currentMonth   = new Date().getMonth();
+let currentYear    = new Date().getFullYear();
+let activePlatformFilter = null;
+let editingPostDay = null;
+let kwSortField = 'volume';
+let kwSortAsc   = false;
+
+const clientName = localStorage.getItem('clientName') || 'elensAI';
+
+// ── KPI data ──
+const kpis = [
+  { icon:'📈', label:'Organic Traffic',   value:'8,420',   trend:'+28%',  dir:'up',   color:'kpi-green', target:'10,000' },
+  { icon:'🏆', label:'Avg Keyword Rank',  value:'18.4',    trend:'↑ 5 pos',dir:'up',  color:'kpi-blue',  target:'Top 15' },
+  { icon:'🔗', label:'Domain Authority',  value:'42',      trend:'+2 pts', dir:'up',  color:'kpi-navy',  target:'50+' },
+  { icon:'🔑', label:'Top-10 Rankings',   value:'14',      trend:'+3',     dir:'up',  color:'kpi-green', target:'25' },
+  { icon:'⚡', label:'Page Speed Score',  value:'68',      trend:'-2 pts', dir:'down', color:'kpi-orange',target:'80+' },
+  { icon:'📋', label:'Indexed Pages',     value:'87',      trend:'+5',     dir:'up',  color:'kpi-blue',  target:'100+' },
+  { icon:'💰', label:'Organic Leads/Mo',  value:'47',      trend:'+12%',   dir:'up',  color:'kpi-green', target:'75' },
+  { icon:'🔙', label:'New Backlinks/Mo',  value:'18',      trend:'▼ vs 30',dir:'flat', color:'kpi-orange',target:'30+' },
+];
+
+// ── Audit scores ──
+const auditScores = [
+  { name:'Technical SEO', score:75, pri:'High',   issues:3 },
+  { name:'On-Page SEO',   score:82, pri:'High',   issues:2 },
+  { name:'Content',       score:70, pri:'Medium', issues:4 },
+  { name:'Backlinks',     score:60, pri:'Medium', issues:5 },
+  { name:'Local SEO',     score:88, pri:'Low',    issues:1 },
+  { name:'Page Speed',    score:55, pri:'High',   issues:6 },
+];
+
+// ── Issues ──
+const issues = [
+  { sev:'critical', icon:'💥', title:'Core Web Vitals: LCP Failing', desc:'LCP at 4.2s — must be under 2.5s. Direct ranking factor. P0 fix required.' },
+  { sev:'critical', icon:'🚫', title:'Canonical Tags Missing', desc:'12 pages lack canonical tags — causing duplicate content signals in Google.' },
+  { sev:'high',     icon:'⚠️', title:'Image Alt Text Missing', desc:'38% of images have no alt text — hurting accessibility and image SEO.' },
+  { sev:'high',     icon:'📉', title:'Backlink Target Gap', desc:'18 new links this month vs 30 target. Increase outreach cadence immediately.' },
+  { sev:'high',     icon:'🔄', title:'Redirect Chains Detected', desc:'7 pages have 3+ redirect hops — diluting PageRank and slowing crawl.' },
+  { sev:'medium',   icon:'📄', title:'Thin Content Pages', desc:'11 pages under 600 words — at risk in Helpful Content updates.' },
+  { sev:'medium',   icon:'🗺️', title:'Schema Markup Incomplete', desc:'4 of 8 priority pages still need structured data implementation.' },
+  { sev:'medium',   icon:'📌', title:'Internal Linking Sparse', desc:'Average 1.8 internal links per post. Target minimum 4 per page.' },
+];
+
+// ── Calendar posts ──
+let posts = {
+  1:  [{ platform:'Instagram', type:'Reel',     title:'5 SEO Mistakes',              hook:'❌ You\'re doing SEO wrong — Google hates it.', cta:'DM "AUDIT" for free SEO check', status:'Scheduled', keywords:'#SEO #DigitalMarketing' }],
+  2:  [{ platform:'Blog/SEO',  type:'Blog Post', title:'Technical SEO Guide 2026',   hook:'Technical SEO is no longer optional.',          cta:'Download free checklist',        status:'Draft',     keywords:'technical seo, core web vitals' }],
+  3:  [{ platform:'LinkedIn',  type:'Post',      title:'Client Traffic +312% Case Study', hook:'6 months ago, this client had 800 visitors.', cta:'Comment "STRATEGY" for the deck', status:'Scheduled', keywords:'#CaseStudy #Growth' }],
+  4:  [{ platform:'Email',     type:'Newsletter', title:'Weekly SEO Digest',         hook:'This week in SEO: Google dropped a core update...', cta:'Book a Free Strategy Call', status:'Published', keywords:'N/A' }],
+  5:  [{ platform:'Twitter/X', type:'Thread',    title:'10 Algorithm Myths Debunked',hook:'MYTH: More content = higher rankings. WRONG.', cta:'RT if this helped!',           status:'Published', keywords:'#SEO #GoogleAlgorithm' }],
+  7:  [{ platform:'Instagram', type:'Story',     title:'Your #1 SEO Challenge Poll', hook:'We\'re building content around YOUR pain points.', cta:'Vote + DM for personalized tip', status:'Draft', keywords:'#SEOHelp' }],
+  8:  [{ platform:'YouTube',   type:'Short',     title:'Keyword Research in 60 Seconds', hook:'Finding the RIGHT keywords is the #1 secret.', cta:'Subscribe for weekly tips', status:'Draft', keywords:'#KeywordResearch #YouTubeShorts' }],
+  9:  [{ platform:'Blog/SEO',  type:'Blog Post', title:'Content Marketing ROI Guide', hook:'Most marketers measure the wrong metrics.',    cta:'Get our free ROI Calculator',  status:'Draft',     keywords:'content marketing roi' }],
+  10: [{ platform:'LinkedIn',  type:'Article',   title:'AI Will Not Replace SEO',    hook:'Hot take: AI makes SEO MORE important.',        cta:'Share your take below 👇',       status:'Draft',     keywords:'#AIinMarketing #SEO2026' }],
+  12: [{ platform:'Instagram', type:'Carousel',  title:'Before & After SEO Results', hook:'Swipe → to see what 3 months of SEO can do.', cta:'DM "RESULTS" for our portfolio', status:'In Review', keywords:'#SEOResults #ClientWins' }],
+  15: [{ platform:'Instagram', type:'Reel',      title:'Day in the Life: SEO Agency','hook':'Ever wondered what we do all day? Here\'s the truth:', cta:'Follow for more agency life!', status:'Draft', keywords:'#AgencyLife #BehindTheScenes' }],
+  16: [{ platform:'Blog/SEO',  type:'Blog Post', title:'Local SEO Checklist 2026',   hook:'If you\'re not doing local SEO, you\'re invisible.', cta:'Download printable checklist', status:'Draft', keywords:'local seo checklist 2026' }],
+  18: [{ platform:'YouTube',   type:'Tutorial',  title:'Full SEO Audit Walkthrough',  hook:'Watch us audit a REAL website live.',           cta:'Subscribe + get free template', status:'Draft',     keywords:'#SEOAudit #Tutorial' }],
+  19: [{ platform:'Email',     type:'Case Study', title:'+200% Traffic Case Study Email', hook:'Here\'s a case study worth bookmarking.', cta:'Book a Free Consultation',       status:'Draft',     keywords:'N/A' }],
+  23: [{ platform:'Blog/SEO',  type:'Blog Post', title:'Google Ads vs SEO 2026',      hook:'The eternal debate — the answer might surprise you.', cta:'Get our Decision Matrix', status:'Draft',    keywords:'google ads vs seo' }],
+  25: [{ platform:'Instagram', type:'Reel',      title:'3 Lead Gen Hacks',            hook:'We 10x\'d leads using these 3 simple hacks.',    cta:'Comment "LEADS" for checklist!', status:'Draft', keywords:'#LeadGeneration #MarketingHacks' }],
+  26: [{ platform:'Email',     type:'Promo',     title:'Q2 SEO Package — Save 20%',   hook:'Quick one — we\'re opening 3 new spots for Q2.', cta:'Claim Your Spot — Ends Apr 30', status:'Draft', keywords:'N/A' }],
+  30: [{ platform:'LinkedIn',  type:'Recap',     title:'April in Numbers: Real Results', hook:'Transparency post: here\'s what we achieved in April.', cta:'Follow for monthly updates!', status:'Draft', keywords:'#MarketingResults #Transparency' }],
+};
+
+// ── Task Loop ──
+const steps = [
+  {
+    id: 1,
+    title: 'Morning SEO Health Check',
+    time: '30–45 min',
+    icon: '☀️',
+    desc: 'Check all client accounts before doing anything else.',
+    tasks: [
+      { text:'Log into Google Search Console — check coverage errors & penalties', tag:'GSC' },
+      { text:'Review GA4 traffic: sessions, bounce rate, goal completions', tag:'GA4' },
+      { text:'Check Core Web Vitals report — flag any new failures', tag:'CWV' },
+      { text:'Scan Google Alerts for brand mentions & competitor news', tag:'Alerts' },
+      { text:'Review position changes for top 20 tracked keywords', tag:'Rankings' },
+    ],
+    escalation: 'If organic traffic drops >20% day-over-day OR a manual action is flagged — alert SEO Lead immediately before proceeding.',
+  },
+  {
+    id: 2,
+    title: 'Issue Identification & Prioritization',
+    time: '20–30 min',
+    icon: '🔍',
+    desc: 'Categorize any issues found in Step 1 using the priority matrix.',
+    tasks: [
+      { text:'Log all new issues found in client project tracker (Asana/Notion)', tag:'Tracking' },
+      { text:'Classify each issue: P0 Critical / P1 High / P2 Medium / P3 Low', tag:'Priority' },
+      { text:'Assign estimated fix time and responsible team member', tag:'Planning' },
+      { text:'Update the SEO Audit Tracker with new issue statuses', tag:'Docs' },
+    ],
+  },
+  {
+    id: 3,
+    title: 'Execute Daily SEO Tasks',
+    time: '2–3 hours',
+    icon: '🔧',
+    desc: 'Execute 2–3 focused tasks from the SEO operations queue.',
+    tasks: [
+      { text:'On-page: Update meta titles & descriptions for 3–5 pages', tag:'On-Page' },
+      { text:'Keyword research: Identify 5 new long-tail opportunities', tag:'KW Research' },
+      { text:'Internal linking: Add 3–5 contextual links to recent content', tag:'Links' },
+      { text:'Technical fix: Address one P1 or P2 technical issue', tag:'Technical' },
+      { text:'Content brief: Create detailed SEO brief for 1 new blog post', tag:'Content' },
+    ],
+  },
+  {
+    id: 4,
+    title: 'Content & Link Building',
+    time: '1–1.5 hours',
+    icon: '✍️',
+    desc: 'Create content and build authority through outreach.',
+    tasks: [
+      { text:'Review or write 500+ words of content (blog or landing page)', tag:'Content' },
+      { text:'Repurpose 1 published blog into 2–3 social media posts', tag:'Repurpose' },
+      { text:'Send 3–5 outreach emails for link building / guest posts', tag:'Outreach' },
+      { text:'Follow up on pending outreach from previous week', tag:'Follow-up' },
+    ],
+  },
+  {
+    id: 5,
+    title: 'Daily Report & Wrap-Up',
+    time: '15–20 min',
+    icon: '📋',
+    desc: 'Document, report, and set up tomorrow\'s priorities.',
+    tasks: [
+      { text:'Log all completed tasks in project management tool', tag:'Tracking' },
+      { text:'Update rankings tracker with any new position data', tag:'Rankings' },
+      { text:'Post daily standup update in team Slack channel', tag:'Comms' },
+      { text:'Set top 3 priorities for tomorrow based on unfinished work', tag:'Planning' },
+    ],
+  },
+];
+
+// ── Keywords ──
+let keywords = [
+  { kw:'digital marketing agency',          vol:14800, diff:72, intent:'Commercial',    rank:22,  target:10,  trend:'up',   url:'/services',          priority:'High' },
+  { kw:'seo services for small business',   vol:2400,  diff:55, intent:'Transactional', rank:15,  target:10,  trend:'up',   url:'/seo-services',      priority:'High' },
+  { kw:'what is technical seo',             vol:5400,  diff:42, intent:'Informational', rank:null,target:20,  trend:'new',  url:'/blog/technical-seo',priority:'Medium' },
+  { kw:'local seo near me',                 vol:1900,  diff:38, intent:'Local',         rank:12,  target:5,   trend:'up',   url:'/local-seo',         priority:'High' },
+  { kw:'best google ads agency',            vol:3600,  diff:68, intent:'Transactional', rank:35,  target:20,  trend:'up',   url:'/google-ads',        priority:'High' },
+  { kw:'content marketing strategy 2026',   vol:880,   diff:35, intent:'Informational', rank:22,  target:15,  trend:'up',   url:'/blog/content',      priority:'Medium' },
+  { kw:'social media management pricing',   vol:1300,  diff:50, intent:'Commercial',    rank:null,target:15,  trend:'new',  url:'/pricing',           priority:'High' },
+  { kw:'how to improve website speed',      vol:4400,  diff:40, intent:'Informational', rank:60,  target:20,  trend:'down', url:'/blog/page-speed',   priority:'Low' },
+  { kw:'email marketing automation tools',  vol:2900,  diff:60, intent:'Commercial',    rank:55,  target:20,  trend:'flat', url:'/email-marketing',   priority:'Medium' },
+  { kw:'ecommerce seo checklist',           vol:720,   diff:32, intent:'Informational', rank:16,  target:8,   trend:'up',   url:'/blog/ecommerce-seo',priority:'Medium' },
+];
+
+// task completion state
+let taskState = {};
+steps.forEach(s => s.tasks.forEach((t, i) => { taskState[`${s.id}-${i}`] = false; }));
+
+// ─────────────────────────────────────────────────────────────
+// NAVIGATION
+// ─────────────────────────────────────────────────────────────
+const sectionMeta = {
+  dashboard: { title:'SEO Dashboard', sub:'Your real-time agency performance overview' },
+  calendar:  { title:'Content Calendar', sub:'Plan and track all your content across platforms' },
+  tasks:     { title:'Daily Task Loop', sub:'Your structured 5-step daily SEO workflow' },
+  keywords:  { title:'Keyword & Rankings Tracker', sub:'Monitor and manage all target keywords' },
+};
+
+function navigate(section, sidebarEl, bnavEl) {
+  currentSection = section;
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + section).classList.add('active');
+
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (sidebarEl) sidebarEl.classList.add('active');
+
+  document.querySelectorAll('.bnav-item').forEach(n => n.classList.remove('active'));
+  if (bnavEl) bnavEl.classList.add('active');
+  else document.getElementById('bnav-' + section)?.classList.add('active');
+
+  const meta = sectionMeta[section];
+  document.getElementById('topbarTitle').textContent = meta.title;
+  document.getElementById('topbarSub').textContent   = meta.sub;
+
+  // sync sidebar active
+  const allNavItems = document.querySelectorAll('.nav-item');
+  allNavItems.forEach(item => {
+    if (item.getAttribute('onclick') && item.getAttribute('onclick').includes("'" + section + "'"))
+      item.classList.add('active');
+  });
+
+  closeSidebar();
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+}
+
+// ─────────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────────
+function init() {
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  document.getElementById('topbarDate').textContent = dateStr;
+  document.getElementById('sidebarDate').textContent = dateStr;
+  document.getElementById('taskDate').textContent = dateStr;
+  document.getElementById('clientNameSidebar').textContent = clientName + ' Agency';
+  document.getElementById('clientNameTop').textContent = clientName;
+
+  renderKPIs();
+  renderAuditScores();
+  renderIssues();
+  renderCalendar();
+  renderPlatformFilters();
+  renderTaskLoop();
+  renderKeywords();
+  renderTrackerStats();
+}
+
+// ─────────────────────────────────────────────────────────────
+// DASHBOARD
+// ─────────────────────────────────────────────────────────────
+function renderKPIs() {
+  document.getElementById('kpiGrid').innerHTML = kpis.map(k => `
+    <div class="kpi-card ${k.color}">
+      <div class="kpi-icon">${k.icon}</div>
+      <div class="kpi-value">${k.value}</div>
+      <div class="kpi-label">${k.label}</div>
+      <div class="kpi-trend ${k.dir}">${k.dir==='up'?'▲':k.dir==='down'?'▼':'→'} ${k.trend}</div>
+      <div style="font-size:11px;color:var(--gray-500);margin-top:4px">Target: ${k.target}</div>
+    </div>
+  `).join('');
+}
+
+function renderAuditScores() {
+  document.getElementById('auditScores').innerHTML = auditScores.map(a => {
+    const sc = a.score;
+    const cls = sc >= 80 ? 'score-high' : sc >= 65 ? 'score-mid' : 'score-low';
+    const barColor = sc >= 80 ? 'var(--green)' : sc >= 65 ? 'var(--orange)' : 'var(--red)';
+    const priBadge = a.pri === 'High' ? 'badge-red' : a.pri === 'Medium' ? 'badge-orange' : 'badge-green';
+    return `
+      <div class="audit-item">
+        <div class="audit-item-header">
+          <span>${a.name}</span>
+          <span class="audit-score ${cls}">${a.score}/100</span>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" style="width:${a.score}%;background:${barColor}"></div>
+        </div>
+        <div class="audit-meta">
+          <small>${a.issues} issue${a.issues!==1?'s':''} found</small>
+          <span class="badge ${priBadge}" style="font-size:10px">${a.pri}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderIssues() {
+  document.getElementById('issueCount').textContent = issues.length + ' Open';
+  document.getElementById('issuesList').innerHTML = issues.map(i => `
+    <div class="issue-item ${i.sev}">
+      <div class="issue-icon">${i.icon}</div>
+      <div>
+        <h4>${i.title}</h4>
+        <p>${i.desc}</p>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ─────────────────────────────────────────────────────────────
+// CALENDAR
+// ─────────────────────────────────────────────────────────────
+const platformStyles = {
+  'Instagram': 'pill-instagram', 'LinkedIn': 'pill-linkedin',
+  'Twitter/X': 'pill-twitter',   'Facebook': 'pill-facebook',
+  'Blog/SEO': 'pill-blog',       'Email': 'pill-email', 'YouTube': 'pill-youtube',
+};
+const platformColors = {
+  'Instagram': '#E4405F', 'LinkedIn': '#0077B5', 'Twitter/X': '#1DA1F2',
+  'Facebook': '#1877F2',  'Blog/SEO': '#E67E22', 'Email': '#C0392B', 'YouTube': '#FF0000',
+};
+const platformFiltersData = ['Instagram','LinkedIn','Twitter/X','Facebook','Blog/SEO','Email','YouTube'];
+
+function renderPlatformFilters() {
+  document.getElementById('platformFilters').innerHTML = platformFiltersData.map(p => `
+    <span class="plat-filter ${platformStyles[p]}" style="color:${platformColors[p]};border-color:transparent"
+      onclick="filterPlatform('${p}', this)">${p}</span>
+  `).join('');
+}
+
+function filterPlatform(platform, el) {
+  if (activePlatformFilter === platform) {
+    activePlatformFilter = null;
+    document.querySelectorAll('.plat-filter').forEach(e => e.classList.remove('active'));
+  } else {
+    activePlatformFilter = platform;
+    document.querySelectorAll('.plat-filter').forEach(e => e.classList.remove('active'));
+    el.classList.add('active');
+  }
+  renderCalendar();
+}
+
+function changeMonth(delta) {
+  currentMonth += delta;
+  if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+  if (currentMonth < 0)  { currentMonth = 11; currentYear--; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const monthNames = ['January','February','March','April','May','June',
+                       'July','August','September','October','November','December'];
+  document.getElementById('calMonthLabel').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+  const firstDay  = new Date(currentYear, currentMonth, 1).getDay();
+  const daysInMon = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const today     = new Date();
+
+  const dayHeaders = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  let html = dayHeaders.map(d => `<div class="cal-day-header">${d}</div>`).join('');
+
+  // empty cells before day 1
+  for (let i = 0; i < firstDay; i++) html += '<div class="cal-day empty"></div>';
+
+  for (let d = 1; d <= daysInMon; d++) {
+    const isToday = today.getDate()===d && today.getMonth()===currentMonth && today.getFullYear()===currentYear;
+    const dayPosts = (posts[d] || []).filter(p => !activePlatformFilter || p.platform === activePlatformFilter);
+    const hasPosts = dayPosts.length > 0;
+    html += `<div class="cal-day ${isToday?'today':''} ${hasPosts?'has-content':''}" onclick="openDay(${d})">
+      <div class="cal-day-num">${d}</div>
+      ${dayPosts.slice(0,2).map(p => `
+        <span class="cal-post-pill ${platformStyles[p.platform] || ''}">${p.platform === 'Instagram'?'📸':p.platform==='LinkedIn'?'💼':p.platform==='Twitter/X'?'🐦':p.platform==='Blog/SEO'?'✍️':p.platform==='Email'?'📧':p.platform==='YouTube'?'▶️':'📢'} ${p.title.length > 18 ? p.title.substring(0,18)+'…' : p.title}</span>
+      `).join('')}
+      ${dayPosts.length > 2 ? `<span style="font-size:10px;color:var(--gray-500)">+${dayPosts.length-2} more</span>` : ''}
+    </div>`;
+  }
+  document.getElementById('calendarGrid').innerHTML = html;
+}
+
+function openDay(day) {
+  editingPostDay = day;
+  const dayPosts = posts[day] || [];
+
+  if (dayPosts.length > 0) {
+    const p = dayPosts[0];
+    document.getElementById('modalTitle').textContent = `Day ${day} — ${p.title}`;
+    renderModalBody(p, day);
+  } else {
+    document.getElementById('modalTitle').textContent = `Add Post — Day ${day}`;
+    renderModalBody(null, day);
+  }
+  document.getElementById('postModal').classList.add('open');
+}
+
+function openAddPost() {
+  editingPostDay = null;
+  document.getElementById('modalTitle').textContent = 'Schedule New Post';
+  renderModalBody(null, null);
+  document.getElementById('postModal').classList.add('open');
+}
+
+function renderModalBody(p, day) {
+  const monthDays = new Date(currentYear, currentMonth + 1, 0).getDate();
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal-field">
+      <label>Day of Month</label>
+      <input type="number" id="mDay" min="1" max="${monthDays}" value="${day || ''}"/>
+    </div>
+    <div class="modal-row">
+      <div class="modal-field">
+        <label>Platform</label>
+        <select id="mPlatform">
+          ${platformFiltersData.map(pl => `<option ${p&&p.platform===pl?'selected':''}>${pl}</option>`).join('')}
+        </select>
+      </div>
+      <div class="modal-field">
+        <label>Content Type</label>
+        <input type="text" id="mType" value="${p ? p.type : ''}" placeholder="Reel, Blog, Thread..."/>
+      </div>
+    </div>
+    <div class="modal-field">
+      <label>Title / Topic</label>
+      <input type="text" id="mTitle" value="${p ? p.title : ''}" placeholder="Post headline or topic"/>
+    </div>
+    <div class="modal-field">
+      <label>Hook (First Line)</label>
+      <textarea id="mHook" rows="2">${p ? p.hook : ''}</textarea>
+    </div>
+    <div class="modal-field">
+      <label>CTA</label>
+      <input type="text" id="mCta" value="${p ? p.cta : ''}" placeholder="Call to action"/>
+    </div>
+    <div class="modal-row">
+      <div class="modal-field">
+        <label>Status</label>
+        <select id="mStatus">
+          ${['Draft','In Review','Scheduled','Published'].map(s => `<option ${p&&p.status===s?'selected':''}>${s}</option>`).join('')}
+        </select>
+      </div>
+      <div class="modal-field">
+        <label>Keywords / Hashtags</label>
+        <input type="text" id="mKw" value="${p ? p.keywords : ''}" placeholder="#SEO #Digital"/>
+      </div>
+    </div>
+  `;
+}
+
+function savePost() {
+  const day      = parseInt(document.getElementById('mDay').value);
+  const platform = document.getElementById('mPlatform').value;
+  const type     = document.getElementById('mType').value;
+  const title    = document.getElementById('mTitle').value;
+  const hook     = document.getElementById('mHook').value;
+  const cta      = document.getElementById('mCta').value;
+  const status   = document.getElementById('mStatus').value;
+  const kw       = document.getElementById('mKw').value;
+
+  if (!title || !day) { alert('Please enter a day and title.'); return; }
+
+  if (!posts[day]) posts[day] = [];
+  const newPost = { platform, type, title, hook, cta, status, keywords: kw };
+  if (editingPostDay && posts[editingPostDay] && posts[editingPostDay].length > 0) {
+    posts[editingPostDay][0] = newPost;
+    if (editingPostDay !== day) {
+      posts[editingPostDay].splice(0, 1);
+      posts[day] = posts[day] || [];
+      posts[day].push(newPost);
+    }
+  } else {
+    posts[day].push(newPost);
+  }
+  closeModal();
+  renderCalendar();
+}
+
+function closeModal() {
+  document.getElementById('postModal').classList.remove('open');
+}
+
+// ─────────────────────────────────────────────────────────────
+// TASK LOOP
+// ─────────────────────────────────────────────────────────────
+function renderTaskLoop() {
+  updateTaskProgress();
+  renderStepsRibbon();
+  renderStepPanels();
+}
+
+function updateTaskProgress() {
+  const total    = Object.keys(taskState).length;
+  const done     = Object.values(taskState).filter(Boolean).length;
+  const pct      = total ? Math.round((done / total) * 100) : 0;
+  document.getElementById('taskPct').textContent = pct + '%';
+  document.getElementById('taskProgressBar').style.width = pct + '%';
+  document.getElementById('pendingBadge').textContent = total - done;
+  if (pct === 100) document.getElementById('taskProgressBar').style.background = 'var(--green)';
+}
+
+function renderStepsRibbon() {
+  document.getElementById('stepsRibbon').innerHTML = steps.map(s => {
+    const total = s.tasks.length;
+    const done  = s.tasks.filter((_, i) => taskState[`${s.id}-${i}`]).length;
+    const state = done === total ? 'done' : done > 0 ? 'active' : 'pending';
+    return `<div class="step-bubble ${state}" onclick="expandStep(${s.id})">
+      ${state==='done'?'✓':s.id} ${s.title.split(' ').slice(0,2).join(' ')}
+      (${done}/${total})
+    </div>`;
+  }).join('');
+}
+
+let expandedSteps = new Set([1]);
+
+function expandStep(id) {
+  if (expandedSteps.has(id)) expandedSteps.delete(id);
+  else expandedSteps.add(id);
+  renderStepPanels();
+  renderStepsRibbon();
+}
+
+function renderStepPanels() {
+  document.getElementById('stepPanels').innerHTML = steps.map(s => {
+    const total = s.tasks.length;
+    const done  = s.tasks.filter((_, i) => taskState[`${s.id}-${i}`]).length;
+    const state = done === total ? 'done' : done > 0 ? 'active' : 'pending';
+    const expanded = expandedSteps.has(s.id);
+
+    const tasksHtml = s.tasks.map((t, i) => {
+      const checked = taskState[`${s.id}-${i}`];
+      return `<div class="task-check-item ${checked?'checked':''}" onclick="toggleTask(${s.id}, ${i})">
+        <input type="checkbox" ${checked?'checked':''} onclick="event.stopPropagation();toggleTask(${s.id},${i})"/>
+        <span class="check-text">${t.text}</span>
+        <span class="check-tag"><span class="badge badge-blue" style="font-size:10px">${t.tag}</span></span>
+      </div>`;
+    }).join('');
+
+    const escalation = s.escalation ? `<div class="escalation-box"><p>🚨 ${s.escalation}</p></div>` : '';
+
+    return `<div class="step-panel ${state} ${expanded?'expanded':''}">
+      <div class="step-panel-header" onclick="expandStep(${s.id})">
+        <div class="step-num ${state}">${state==='done'?'✓':s.id}</div>
+        <div class="step-panel-meta">
+          <h4>${s.icon} ${s.title}</h4>
+          <p>${s.desc} &nbsp;·&nbsp; ${done}/${total} tasks done</p>
+        </div>
+        <span class="step-time-badge">⏱ ${s.time}</span>
+        <span style="font-size:18px;color:var(--gray-500);margin-left:8px">${expanded?'▲':'▼'}</span>
+      </div>
+      <div class="step-panel-body">
+        <div class="task-checklist">${tasksHtml}</div>
+        ${escalation}
+        <textarea class="notes-area" placeholder="Add notes for this step (e.g., issues found, client updates)..."></textarea>
+        <div class="step-action-row">
+          <button class="btn btn-primary btn-sm" onclick="markAllStep(${s.id})">✓ Mark All Done</button>
+          <button class="btn btn-outline btn-sm" onclick="clearStep(${s.id})">↺ Reset Step</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleTask(stepId, taskIdx) {
+  const key = `${stepId}-${taskIdx}`;
+  taskState[key] = !taskState[key];
+  updateTaskProgress();
+  renderStepsRibbon();
+  renderStepPanels();
+}
+
+function markAllStep(stepId) {
+  const step = steps.find(s => s.id === stepId);
+  step.tasks.forEach((_, i) => { taskState[`${stepId}-${i}`] = true; });
+  updateTaskProgress();
+  renderStepsRibbon();
+  renderStepPanels();
+}
+
+function clearStep(stepId) {
+  const step = steps.find(s => s.id === stepId);
+  step.tasks.forEach((_, i) => { taskState[`${stepId}-${i}`] = false; });
+  updateTaskProgress();
+  renderStepsRibbon();
+  renderStepPanels();
+}
+
+// ─────────────────────────────────────────────────────────────
+// KEYWORD TRACKER
+// ─────────────────────────────────────────────────────────────
+function renderTrackerStats() {
+  const ranked      = keywords.filter(k => k.rank && k.rank <= 10).length;
+  const top20       = keywords.filter(k => k.rank && k.rank <= 20).length;
+  const notRanked   = keywords.filter(k => !k.rank).length;
+  const avgDiff     = Math.round(keywords.reduce((s,k)=>s+k.diff,0)/keywords.length);
+  const totalVol    = keywords.reduce((s,k)=>s+k.vol,0);
+  document.getElementById('trackerStats').innerHTML = `
+    <div class="tracker-stat"><div class="ts-val">${keywords.length}</div><div class="ts-lbl">Keywords Tracked</div></div>
+    <div class="tracker-stat"><div class="ts-val" style="color:var(--green)">${ranked}</div><div class="ts-lbl">In Top 10</div></div>
+    <div class="tracker-stat"><div class="ts-val" style="color:var(--blue)">${top20}</div><div class="ts-lbl">In Top 20</div></div>
+    <div class="tracker-stat"><div class="ts-val" style="color:var(--gray-500)">${notRanked}</div><div class="ts-lbl">Not Ranked Yet</div></div>
+    <div class="tracker-stat"><div class="ts-val" style="color:var(--orange)">${avgDiff}</div><div class="ts-lbl">Avg Difficulty</div></div>
+    <div class="tracker-stat"><div class="ts-val">${(totalVol/1000).toFixed(0)}K</div><div class="ts-lbl">Total Monthly Vol</div></div>
+  `;
+}
+
+function filterKeywords() {
+  const q       = document.getElementById('kwSearch').value.toLowerCase();
+  const intent  = document.getElementById('kwFilter').value;
+  kwSortField   = document.getElementById('kwSort').value;
+  renderKeywords(q, intent);
+}
+
+function sortTable(field) {
+  if (kwSortField === field) kwSortAsc = !kwSortAsc;
+  else { kwSortField = field; kwSortAsc = false; }
+  document.getElementById('kwSort').value = field;
+  filterKeywords();
+}
+
+function renderKeywords(q='', intentFilter='') {
+  let kws = [...keywords];
+  if (q)            kws = kws.filter(k => k.kw.toLowerCase().includes(q) || k.url.includes(q) || k.intent.toLowerCase().includes(q));
+  if (intentFilter) kws = kws.filter(k => k.intent === intentFilter);
+
+  kws.sort((a, b) => {
+    let va, vb;
+    if (kwSortField==='volume') { va=a.vol;  vb=b.vol; }
+    else if (kwSortField==='rank')   { va=a.rank||999; vb=b.rank||999; return kwSortAsc ? vb-va : va-vb; }
+    else if (kwSortField==='diff')   { va=a.diff; vb=b.diff; }
+    else { va=a.kw; vb=b.kw; return kwSortAsc ? va.localeCompare(vb) : vb.localeCompare(va); }
+    return kwSortAsc ? va-vb : vb-va;
+  });
+
+  if (kws.length === 0) {
+    document.getElementById('kwTableBody').innerHTML = `<tr><td colspan="9" class="table-empty">No keywords match your search. Try different filters.</td></tr>`;
+    return;
+  }
+
+  document.getElementById('kwTableBody').innerHTML = kws.map((k, idx) => {
+    const diffCls = k.diff < 40 ? 'diff-easy' : k.diff < 65 ? 'diff-med' : 'diff-hard';
+    const rankCls = !k.rank ? 'rank-none' : k.rank <= 3 ? 'rank-top3' : k.rank <= 10 ? 'rank-top10' : k.rank <= 20 ? 'rank-top20' : 'rank-low';
+    const rankTxt = k.rank ? `#${k.rank}` : 'Unranked';
+    const trendHtml = k.trend === 'up' ? '<span class="trend-arrow trend-up">▲</span>'
+      : k.trend === 'down' ? '<span class="trend-arrow trend-down">▼</span>'
+      : k.trend === 'new'  ? '<span class="trend-new">NEW</span>'
+      : '<span class="trend-arrow trend-flat">→</span>';
+    const intentCls = k.intent==='Informational'?'intent-info':k.intent==='Transactional'?'intent-trans':k.intent==='Commercial'?'intent-comm':k.intent==='Local'?'intent-local':'intent-nav';
+    return `
+      <tr>
+        <td><strong style="color:var(--navy)">${k.kw}</strong></td>
+        <td style="text-align:right">${k.vol.toLocaleString()}</td>
+        <td style="text-align:center"><span class="diff-pill ${diffCls}">${k.diff}</span></td>
+        <td><span class="intent-tag ${intentCls}">${k.intent}</span></td>
+        <td style="text-align:center"><span class="rank-chip ${rankCls}">${rankTxt}</span></td>
+        <td style="text-align:center;font-weight:700;color:var(--blue)">#${k.target}</td>
+        <td style="text-align:center">${trendHtml}</td>
+        <td style="font-size:12px;color:var(--gray-500)">${k.url}</td>
+        <td>
+          <button class="btn btn-danger btn-sm" onclick="deleteKeyword(${keywords.indexOf(k)})" style="font-size:11px;padding:3px 8px">Remove</button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function toggleAddForm() {
+  document.getElementById('kwAddForm').classList.toggle('open');
+}
+
+function addKeyword() {
+  const kw     = document.getElementById('newKw').value.trim();
+  const vol    = parseInt(document.getElementById('newVol').value) || 0;
+  const diff   = parseInt(document.getElementById('newDiff').value) || 50;
+  const intent = document.getElementById('newIntent').value;
+  const rank   = parseInt(document.getElementById('newRank').value) || null;
+
+  if (!kw) { alert('Please enter a keyword.'); return; }
+
+  keywords.push({ kw, vol, diff, intent, rank, target: 10, trend: 'new', url: '/', priority: 'Medium' });
+  document.getElementById('newKw').value = '';
+  document.getElementById('newVol').value = '';
+  document.getElementById('newDiff').value = '';
+  document.getElementById('newRank').value = '';
+  filterKeywords();
+  renderTrackerStats();
+  document.getElementById('kwAddForm').classList.remove('open');
+}
+
+function deleteKeyword(idx) {
+  if (confirm('Remove this keyword from tracking?')) {
+    keywords.splice(idx, 1);
+    filterKeywords();
+    renderTrackerStats();
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// CLIENT NAME EDIT
+// ─────────────────────────────────────────────────────────────
+function editClientName() {
+  const name = prompt('Enter client name:', document.getElementById('clientNameTop').textContent);
+  if (name) {
+    document.getElementById('clientNameTop').textContent = name;
+    document.getElementById('clientNameSidebar').textContent = name + ' Agency';
+    localStorage.setItem('clientName', name);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// RUN
+// ─────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
