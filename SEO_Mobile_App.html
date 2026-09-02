@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="theme-color" content="#0d1117"/>
+<meta name="description" content="AI-powered SEO & Digital Marketing Agent — eLensAI"/>
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiU0VPIEFJIEFnZW50IiwidGhlbWVfY29sb3IiOiIjMGQxMTE3IiwiYmFja2dyb3VuZF9jb2xvciI6IiMwZDExMTciLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSJ9"/>
+<title>SEO AI Agent — eLensAI</title>
+<style>
+:root{
+  --bg:#0d1117;--s1:#161b22;--s2:#1c2333;--s3:#21262d;
+  --bd:#30363d;--acc:#238636;--blue:#1f6feb;--purple:#8b5cf6;
+  --orange:#f97316;--yellow:#eab308;--red:#ef4444;
+  --text:#e6edf3;--muted:#8b949e;--r:12px;
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{height:100%;overflow:hidden}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);height:100%;overflow:hidden;display:flex;flex-direction:column}
+
+/* ══════════════ AUTH OVERLAY ══════════════ */
+#auth-screen{
+  position:fixed;inset:0;z-index:9999;background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;overflow-y:auto;
+}
+#auth-screen.hidden{display:none}
+.auth-box{
+  width:100%;max-width:420px;background:var(--s1);
+  border:1px solid var(--bd);border-radius:18px;padding:32px 28px;
+  box-shadow:0 24px 64px rgba(0,0,0,.5);
+}
+.auth-logo{text-align:center;margin-bottom:24px}
+.auth-logo .emoji{font-size:42px;display:block;margin-bottom:8px}
+.auth-logo h1{font-size:18px;font-weight:700;color:var(--text)}
+.auth-logo p{font-size:12px;color:var(--muted);margin-top:3px}
+
+/* tabs */
+.auth-tabs{display:flex;background:var(--s2);border-radius:10px;padding:3px;margin-bottom:24px;gap:3px}
+.auth-tab{flex:1;padding:9px;border:none;border-radius:8px;background:none;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.auth-tab.active{background:var(--s1);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.4)}
+
+/* form */
+.auth-form{display:none}.auth-form.active{display:block}
+.auth-field{margin-bottom:14px}
+.auth-field label{font-size:11px;color:var(--muted);font-weight:500;display:block;margin-bottom:5px}
+.auth-field .input-wrap{position:relative}
+.auth-field input{
+  width:100%;padding:11px 40px 11px 12px;background:var(--s2);
+  border:1px solid var(--bd);border-radius:9px;color:var(--text);
+  font-size:14px;font-family:inherit;transition:border .2s;-webkit-appearance:none;
+}
+.auth-field input:focus{outline:none;border-color:var(--blue)}
+.auth-field input.err{border-color:var(--red)}
+.auth-field input.ok{border-color:var(--acc)}
+.toggle-pw{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px;padding:4px;
+}
+
+/* strength bar */
+.strength-bar{height:4px;background:var(--bd);border-radius:2px;margin-top:6px;overflow:hidden}
+.strength-fill{height:100%;border-radius:2px;transition:all .3s;width:0}
+.strength-text{font-size:10px;margin-top:3px}
+
+/* messages */
+.auth-error{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:10px 12px;font-size:12px;color:#fca5a5;margin-bottom:14px;display:none}
+.auth-success{background:rgba(35,134,54,.12);border:1px solid rgba(35,134,54,.3);border-radius:8px;padding:10px 12px;font-size:12px;color:#86efac;margin-bottom:14px;display:none}
+
+/* requirements list */
+.pw-reqs{margin-top:6px;display:none}
+.pw-req{font-size:10px;color:var(--muted);margin-bottom:2px;display:flex;align-items:center;gap:5px}
+.pw-req.met{color:#3fb950}.pw-req .dot{font-size:10px}
+
+/* submit btn */
+.auth-submit{
+  width:100%;padding:13px;border-radius:10px;border:none;background:var(--blue);
+  color:#fff;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;
+  margin-top:4px;display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.auth-submit:hover{background:#388bfd}
+.auth-submit:active{transform:scale(.98)}
+.auth-submit:disabled{opacity:.5;cursor:not-allowed}
+
+/* divider */
+.auth-divider{text-align:center;font-size:11px;color:var(--muted);margin:16px 0;position:relative}
+.auth-divider::before,.auth-divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--bd)}
+.auth-divider::before{left:0}.auth-divider::after{right:0}
+
+/* remember / forgot */
+.auth-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.auth-check{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--muted)}
+.auth-check input[type=checkbox]{width:15px;height:15px;accent-color:var(--blue);cursor:pointer}
+.auth-link{font-size:12px;color:var(--blue);background:none;border:none;cursor:pointer;padding:0;text-decoration:underline}
+
+/* user badge in topnav */
+.user-badge{display:flex;align-items:center;gap:6px;cursor:pointer;padding:4px 8px;border-radius:20px;border:1px solid var(--bd);background:var(--s2)}
+.user-badge .avatar{width:22px;height:22px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.user-badge .uname{font-size:11px;color:var(--text);max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.user-menu{position:absolute;top:calc(100% + 8px);right:10px;background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:6px;min-width:160px;box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:200;display:none}
+.user-menu.open{display:block}
+.user-menu-item{padding:9px 12px;border-radius:7px;font-size:13px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;border:none;background:none;width:100%;text-align:left}
+.user-menu-item:hover{background:var(--s2)}
+.user-menu-item.danger{color:#f85149}
+.user-wrap{position:relative}
+
+/* ── TOP NAV BAR ── */
+.topnav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:var(--s1);border-bottom:1px solid var(--bd);
+  padding:var(--safe-top) 0 0;display:flex;align-items:center;height:calc(54px + var(--safe-top));
+}
+.topnav .logo{padding:0 16px;font-size:15px;font-weight:700;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.topnav .tag{background:var(--acc);color:#fff;font-size:8px;padding:2px 6px;border-radius:4px;font-weight:700}
+.topnav .spacer{flex:1}
+.topnav .model-badge{font-size:9px;color:var(--muted);background:var(--s2);border:1px solid var(--bd);padding:3px 8px;border-radius:12px;margin-right:10px;white-space:nowrap}
+.menu-btn{background:none;border:none;color:var(--text);font-size:22px;padding:8px 14px;cursor:pointer}
+
+/* ── SIDEBAR OVERLAY (MOBILE) ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;opacity:0;transition:opacity .3s}
+.overlay.open{display:block;opacity:1}
+.sidebar{
+  position:fixed;top:0;left:-280px;bottom:0;width:280px;background:var(--s1);z-index:300;
+  transition:left .3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;
+  border-right:1px solid var(--bd);overflow-y:auto;padding-top:var(--safe-top);
+}
+.sidebar.open{left:0}
+.sidebar .header{padding:16px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between}
+.sidebar .header h2{font-size:14px;font-weight:700}
+.close-btn{background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:4px 8px}
+
+.sidebar .api-section{padding:12px 16px;border-bottom:1px solid var(--bd)}
+.sidebar .api-section label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px}
+.sidebar .api-section input{width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:6px;color:var(--text);font-size:11px;font-family:monospace}
+.sidebar .api-section input:focus{outline:none;border-color:var(--blue)}
+.api-link{font-size:9px;color:var(--blue);display:block;margin-top:4px;text-decoration:none}
+
+.sidebar nav{padding:8px 0;flex:1}
+.nav-group{padding:8px 16px 4px;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:13px;color:var(--muted);border-left:3px solid transparent;cursor:pointer;transition:all .15s}
+.nav-item:hover,.nav-item:active{background:var(--s2);color:var(--text)}
+.nav-item.active{background:var(--s2);color:var(--text);border-left-color:var(--blue)}
+.nav-item .icon{font-size:16px;width:20px;text-align:center}
+
+/* ── MAIN CONTENT ── */
+.main{
+  margin-top:calc(54px + var(--safe-top));
+  padding-bottom:calc(60px + var(--safe-bottom));
+  flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+}
+.content{padding:16px;max-width:960px;margin:0 auto}
+
+/* ── PAGE SYSTEM ── */
+.page{display:none}.page.active{display:block}
+
+/* ── HOME HERO ── */
+.hero{text-align:center;padding:24px 8px 20px}
+.hero .emoji{font-size:48px;margin-bottom:8px}
+.hero h2{font-size:20px;font-weight:700;margin-bottom:6px}
+.hero p{color:var(--muted);font-size:13px;max-width:420px;margin:0 auto;line-height:1.5}
+
+/* ── FEATURE CARDS ── */
+.feature-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.feature-card{
+  background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);
+  padding:16px 12px;cursor:pointer;transition:all .2s;text-align:center;
+  -webkit-user-select:none;user-select:none;
+}
+.feature-card:active{transform:scale(.97);border-color:var(--blue)}
+.feature-card .icon{font-size:26px;margin-bottom:6px}
+.feature-card h3{font-size:12px;font-weight:600;margin-bottom:3px}
+.feature-card p{font-size:10px;color:var(--muted);line-height:1.3}
+
+/* ── FORM CARDS ── */
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.card-title{font-size:14px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.form-grid{display:grid;grid-template-columns:1fr;gap:12px}
+.form-group{display:flex;flex-direction:column;gap:4px}
+.form-group label{font-size:11px;color:var(--muted);font-weight:500}
+input,textarea,select{
+  background:var(--s2);border:1px solid var(--bd);border-radius:8px;
+  color:var(--text);padding:10px 12px;font-size:14px;font-family:inherit;
+  -webkit-appearance:none;appearance:none;transition:border .2s;
+}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--blue)}
+textarea{resize:vertical;min-height:80px}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238b949e'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+
+/* ── BUTTONS ── */
+.btn{
+  padding:12px 20px;border-radius:10px;border:none;cursor:pointer;font-size:14px;
+  font-weight:600;transition:all .15s;display:inline-flex;align-items:center;gap:8px;
+  justify-content:center;width:100%;-webkit-user-select:none;user-select:none;
+}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-secondary{background:var(--s2);color:var(--text);border:1px solid var(--bd)}
+.btn-success{background:var(--acc);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-group{display:flex;gap:8px;margin-top:14px}
+.btn-group .btn{flex:1}
+
+/* ── LOADING ── */
+.loading{display:none;align-items:center;gap:12px;padding:16px;background:var(--s2);border:1px solid var(--bd);border-radius:10px;margin-top:14px}
+.loading.visible{display:flex}
+.spinner{width:22px;height:22px;border:2px solid var(--bd);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:13px;color:var(--muted)}
+
+/* ── RESULT ── */
+.result-area{display:none}
+.result-area.visible{display:block}
+.result-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.result-header span{font-size:13px;font-weight:600;color:var(--acc)}
+.result-box{
+  background:var(--s2);border:1px solid var(--bd);border-radius:10px;
+  padding:16px;font-size:13px;line-height:1.8;white-space:pre-wrap;
+  max-height:70vh;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  word-wrap:break-word;overflow-wrap:break-word;
+}
+.result-box h1,.result-box h2{color:#58a6ff;margin:14px 0 6px;font-size:15px}
+.result-box h3{color:#79c0ff;margin:10px 0 4px;font-size:14px}
+
+/* ── TREND CHIPS ── */
+.trend-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.chip{padding:6px 12px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid var(--bd);background:var(--s2);color:var(--muted);transition:all .15s;-webkit-user-select:none}
+.chip.active,.chip:active{background:var(--blue);border-color:var(--blue);color:#fff}
+
+/* ── BOTTOM TAB BAR (MOBILE) ── */
+.bottombar{
+  position:fixed;bottom:0;left:0;right:0;z-index:100;
+  background:var(--s1);border-top:1px solid var(--bd);
+  display:flex;align-items:center;justify-content:space-around;
+  height:calc(56px + var(--safe-bottom));
+  padding-bottom:var(--safe-bottom);
+}
+.tab-btn{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:6px 4px;font-size:9px;color:var(--muted);background:none;border:none;
+  cursor:pointer;flex:1;-webkit-user-select:none;user-select:none;transition:color .15s;
+}
+.tab-btn .tab-icon{font-size:20px}
+.tab-btn.active{color:var(--blue)}
+.tab-btn:active{color:var(--text)}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bd);border-radius:2px}
+
+/* ── DESKTOP (>768px) ── */
+@media(min-width:769px){
+  .menu-btn{display:none}
+  .overlay{display:none!important}
+  .sidebar{position:fixed;left:0!important;width:250px;padding-top:calc(54px + var(--safe-top))}
+  .main{margin-left:250px}
+  .bottombar{display:none}
+  .form-grid{grid-template-columns:1fr 1fr}
+  .feature-grid{grid-template-columns:repeat(3,1fr)}
+  .content{padding:24px}
+}
+@media(min-width:1100px){
+  .feature-grid{grid-template-columns:repeat(4,1fr)}
+}
+
+/* ── PWA install prompt ── */
+.install-banner{
+  display:none;position:fixed;bottom:70px;left:12px;right:12px;z-index:90;
+  background:var(--s1);border:1px solid var(--blue);border-radius:14px;padding:14px 16px;
+  box-shadow:0 8px 32px rgba(0,0,0,.4);
+}
+.install-banner.visible{display:flex;align-items:center;gap:12px}
+.install-banner p{flex:1;font-size:12px;color:var(--text);line-height:1.4}
+.install-banner .btn{width:auto;padding:8px 16px;font-size:12px}
+.install-banner .dismiss{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px 8px}
+</style>
+</head>
+<body>
+
+<!-- ═══ AUTH SCREEN ═══ -->
+<div id="auth-screen">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <span class="emoji">🤖</span>
+      <h1>SEO AI Agent</h1>
+      <p>Powered by Groq · eLensAI</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('login')">Sign In</button>
+      <button class="auth-tab" onclick="switchTab('signup')">Create Account</button>
+    </div>
+
+    <div id="auth-msg-error" class="auth-error"></div>
+    <div id="auth-msg-success" class="auth-success"></div>
+
+    <!-- LOGIN FORM -->
+    <form class="auth-form active" id="form-login" onsubmit="doLogin(event)">
+      <div class="auth-field">
+        <label>Email Address</label>
+        <div class="input-wrap">
+          <input type="email" id="login-email" placeholder="you@example.com" required autocomplete="email"/>
+        </div>
+      </div>
+      <div class="auth-field">
+        <label>Password</label>
+        <div class="input-wrap">
+          <input type="password" id="login-pw" placeholder="Enter your password" required autocomplete="current-password"/>
+          <button type="button" class="toggle-pw" onclick="togglePw('login-pw',this)">👁</button>
+        </div>
+      </div>
+      <div class="auth-row">
+        <label class="auth-check"><input type="checkbox" id="remember-me"/> Remember me</label>
+        <button type="button" class="auth-link" onclick="showReset()">Forgot password?</button>
+      </div>
+      <button type="submit" class="auth-submit" id="login-btn">🔐 Sign In</button>
+    </form>
+
+    <!-- SIGNUP FORM -->
+    <form class="auth-form" id="form-signup" onsubmit="doSignup(event)">
+      <div class="auth-field">
+        <label>Full Name</label>
+        <div class="input-wrap">
+          <input type="text" id="signup-name" placeholder="Your name" required autocomplete="name"/>
+        </div>
+      </div>
+      <div class="auth-field">
+        <label>Email Address</label>
+        <div class="input-wrap">
+          <input type="email" id="signup-email" placeholder="you@example.com" required autocomplete="email"/>
+        </div>
+      </div>
+      <div class="auth-field">
+        <label>Password</label>
+        <div class="input-wrap">
+          <input type="password" id="signup-pw" placeholder="Create a strong password" required autocomplete="new-password" oninput="checkStrength(this.value)"/>
+          <button type="button" class="toggle-pw" onclick="togglePw('signup-pw',this)">👁</button>
+        </div>
+        <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+        <div class="strength-text" id="strength-text"></div>
+        <div class="pw-reqs" id="pw-reqs">
+          <div class="pw-req" id="req-len"><span class="dot">○</span> At least 8 characters</div>
+          <div class="pw-req" id="req-upper"><span class="dot">○</span> One uppercase letter (A–Z)</div>
+          <div class="pw-req" id="req-num"><span class="dot">○</span> One number (0–9)</div>
+          <div class="pw-req" id="req-special"><span class="dot">○</span> One special character (!@#$…)</div>
+        </div>
+      </div>
+      <div class="auth-field">
+        <label>Confirm Password</label>
+        <div class="input-wrap">
+          <input type="password" id="signup-pw2" placeholder="Repeat your password" required autocomplete="new-password"/>
+          <button type="button" class="toggle-pw" onclick="togglePw('signup-pw2',this)">👁</button>
+        </div>
+      </div>
+      <button type="submit" class="auth-submit" id="signup-btn">🚀 Create Account</button>
+    </form>
+
+    <!-- RESET FORM -->
+    <form class="auth-form" id="form-reset" onsubmit="doReset(event)">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.5">Enter your email and we'll reset your password. (Since this is a local app, it will show your stored credentials.)</p>
+      <div class="auth-field">
+        <label>Email Address</label>
+        <div class="input-wrap">
+          <input type="email" id="reset-email" placeholder="you@example.com" required/>
+        </div>
+      </div>
+      <button type="submit" class="auth-submit">🔑 Recover Account</button>
+      <div style="text-align:center;margin-top:12px"><button type="button" class="auth-link" onclick="switchTab('login')">← Back to Sign In</button></div>
+    </form>
+  </div>
+</div>
+
+<!-- ═══ TOP NAV ═══ -->
+<header class="topnav">
+  <button class="menu-btn" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+  <div class="logo">🤖 SEO AI Agent <span class="tag">LIVE</span></div>
+  <div class="spacer"></div>
+  <div class="user-wrap" id="user-wrap" style="margin-right:10px;display:none">
+    <div class="user-badge" onclick="toggleUserMenu()">
+      <div class="avatar" id="user-avatar">?</div>
+      <span class="uname" id="user-name-badge">User</span>
+    </div>
+    <div class="user-menu" id="user-menu">
+      <div style="padding:8px 12px;border-bottom:1px solid var(--bd);margin-bottom:4px">
+        <div style="font-size:12px;font-weight:600" id="menu-name">User</div>
+        <div style="font-size:11px;color:var(--muted)" id="menu-email">email</div>
+      </div>
+      <button class="user-menu-item" onclick="goProfile()">👤 My Profile</button>
+      <button class="user-menu-item danger" onclick="doLogout()">🚪 Sign Out</button>
+    </div>
+  </div>
+  <span class="model-badge" id="top-model-badge">Groq · Llama 3.3 70B</span>
+</header>
+
+<!-- ═══ SIDEBAR OVERLAY ═══ -->
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar" id="sidebar">
+  <div class="header">
+    <h2>🤖 SEO AI Agent</h2>
+    <button class="close-btn" onclick="toggleSidebar()">✕</button>
+  </div>
+  <div class="api-section">
+    <label>Groq API Key</label>
+    <input type="password" id="apiKey" value="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"/>
+    <a class="api-link" href="https://console.groq.com/keys" target="_blank">🔑 console.groq.com/keys</a>
+  </div>
+  <nav>
+    <div class="nav-group">Overview</div>
+    <div class="nav-item active" onclick="go('home')" id="nav-home"><span class="icon">🏠</span>Dashboard</div>
+    <div class="nav-group">SEO Tools</div>
+    <div class="nav-item" onclick="go('keywords')" id="nav-keywords"><span class="icon">🔍</span>Keyword Research</div>
+    <div class="nav-item" onclick="go('content')" id="nav-content"><span class="icon">✍️</span>Content Creation</div>
+    <div class="nav-item" onclick="go('audit')" id="nav-audit"><span class="icon">🔬</span>SEO Audit</div>
+    <div class="nav-item" onclick="go('local')" id="nav-local"><span class="icon">📍</span>Local SEO</div>
+    <div class="nav-group">Marketing</div>
+    <div class="nav-item" onclick="go('social')" id="nav-social"><span class="icon">📱</span>Social Media</div>
+    <div class="nav-item" onclick="go('email')" id="nav-email"><span class="icon">📧</span>Email Marketing</div>
+    <div class="nav-item" onclick="go('ppc')" id="nav-ppc"><span class="icon">💰</span>PPC / Paid Ads</div>
+    <div class="nav-item" onclick="go('competitor')" id="nav-competitor"><span class="icon">🕵️</span>Competitor Analysis</div>
+    <div class="nav-group">Intelligence</div>
+    <div class="nav-item" onclick="go('trends')" id="nav-trends"><span class="icon">📈</span>Latest Trends</div>
+    <div class="nav-item" onclick="go('report')" id="nav-report"><span class="icon">📊</span>Monthly Report</div>
+    <div class="nav-item" onclick="go('custom')" id="nav-custom"><span class="icon">🛠️</span>Custom Task</div>
+    <div class="nav-group">Account</div>
+    <div class="nav-item" onclick="goProfile()" id="nav-profile"><span class="icon">👤</span><span id="sidebar-uname">Profile</span></div>
+    <div class="nav-item" onclick="doLogout()" style="color:#f85149"><span class="icon">🚪</span>Sign Out</div>
+  </nav>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+<div class="content">
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="emoji">🤖</div>
+    <h2>Your AI Marketing Employee</h2>
+    <p>Full-stack SEO & Digital Marketing Agent powered by Groq. Handles keyword research, content, audits, social media, email, PPC & more — 24/7.</p>
+  </div>
+  <div class="feature-grid">
+    <div class="feature-card" onclick="go('keywords')"><div class="icon">🔍</div><h3>Keyword Research</h3><p>Primary, long-tail, LSI & question keywords</p></div>
+    <div class="feature-card" onclick="go('content')"><div class="icon">✍️</div><h3>Content Creation</h3><p>SEO blogs, meta tags, landing pages & more</p></div>
+    <div class="feature-card" onclick="go('audit')"><div class="icon">🔬</div><h3>SEO Audit</h3><p>Technical, on-page & off-page analysis</p></div>
+    <div class="feature-card" onclick="go('social')"><div class="icon">📱</div><h3>Social Media</h3><p>Content calendar, captions, hashtag strategy</p></div>
+    <div class="feature-card" onclick="go('email')"><div class="icon">📧</div><h3>Email Marketing</h3><p>Campaigns, subject lines & drip sequences</p></div>
+    <div class="feature-card" onclick="go('competitor')"><div class="icon">🕵️</div><h3>Competitor Analysis</h3><p>Gaps, opportunities & battle plan</p></div>
+    <div class="feature-card" onclick="go('trends')"><div class="icon">📈</div><h3>Latest Trends</h3><p>Algorithm updates & emerging strategies</p></div>
+    <div class="feature-card" onclick="go('ppc')"><div class="icon">💰</div><h3>PPC Strategy</h3><p>Google Ads, Meta Ads & paid campaigns</p></div>
+    <div class="feature-card" onclick="go('local')"><div class="icon">📍</div><h3>Local SEO</h3><p>Google Business Profile & local rankings</p></div>
+    <div class="feature-card" onclick="go('report')"><div class="icon">📊</div><h3>Monthly Report</h3><p>Executive-level marketing performance reports</p></div>
+    <div class="feature-card" onclick="go('custom')"><div class="icon">🛠️</div><h3>Custom Task</h3><p>Any SEO or marketing task you need</p></div>
+  </div>
+</div>
+
+<!-- KEYWORD RESEARCH -->
+<div class="page" id="page-keywords">
+  <div class="card">
+    <div class="card-title">🔍 Keyword Research & Analysis</div>
+    <div class="form-grid">
+      <div class="form-group"><label>Topic / Product *</label><input id="kw-topic" placeholder="e.g. AI photo editing software"/></div>
+      <div class="form-group"><label>Industry / Niche *</label><input id="kw-niche" placeholder="e.g. SaaS, Photography"/></div>
+      <div class="form-group"><label>Target Audience *</label><input id="kw-audience" placeholder="e.g. Professional photographers"/></div>
+      <div class="form-group"><label>Target Region</label><input id="kw-region" value="Global"/></div>
+      <div class="form-group"><label>Language</label><input id="kw-lang" value="English"/></div>
+      <div class="form-group"><label>Competitors (optional)</label><input id="kw-comp" placeholder="competitor1.com, competitor2.com"/></div>
+    </div>
+    <div class="btn-group"><button class="btn btn-primary" onclick="runTask('keywords')">🔍 Research Keywords</button></div>
+  </div>
+  <div class="loading" id="loading-keywords"><div class="spinner"></div><div class="loading-text">Researching keywords…</div></div>
+  <div class="result-area" id="result-keywords"><div class="card"><div class="result-header"><span>✅ Complete</span><button class="btn btn-secondary" onclick="copyResult('keywords')" style="width:auto;padding:6px 14px;font-size:11px">📋 Copy</button></div><div class="result-box" id="res-keywords"></div></div></div>
+</div>
+
+<!-- CONTENT CREATION -->
+<div class="page" id="page-content">
+  <div class="card">
+    <div class="card-title">✍️ Content Creation & Optimization</div>
+    <div class="form-grid">
+      <div class="form-group"><label>Content Type *</label><select id="ct-type"><option>SEO Blog Post (1500–2000 words)</option><option>Meta Title & Description</option><option>Product/Service Page Copy</option><option>Landing Page Copy</option><option>FAQ Section</option><option>Press Release</option><option>Email Newsletter</option><option>YouTube Video Script</option><option>LinkedIn Article</option></select></div>
+      <div class="form-group"><label>Primary Keyword *</label><input id="ct-keyword" placeholder="e.g. best AI photo editor"/></div>
+      <div class="form-group"><label>Topic / Title *</label><input id="ct-topic" placeholder="e.g. How to Edit Photos with AI"/></div>
+      <div class="form-group"><label>Brand Name</label><input id="ct-brand" value="eLensAI"/></div>
+      <div class="form-group"><label>Brand Voice</label><input id="ct-tone" value="Professional, helpful, trustworthy"/></div>
+      <div class="form-group"><label>Word Count</label><select id="ct-wordcount"><option>500–800 (short)</option><option selected>1000–1500 (standard)</option><option>2000–2500 (long)</option><option>3000+ (pillar)</option></select></div>
+    </div>
+    <div class="form-group" style="margin-top:12px"><label>Special Instructions</label><textarea id="ct-notes" placeholder="Key points, products to mention, CTAs…"></textarea></div>
+    <div class="btn-group"><button class="btn btn-primary" onclick="runTask('content')">✍️ Create Content</button></div>
+  </div>
+  <div class="loading" id="loading-content"><div class="spinner"></div><div class="loading-text">Writing content…</div></div>
+  <div class="result-area" id="result-content-area"><div class="card"><div class="result-header"><span>✅ Content Ready</span><button class="btn btn-secondary" onclick="copyResult('content')" style="width:auto;padding:6px 14px;font-size:11px">📋 Copy</button></div><div class="result-box" id="res-content"></div></div></div>
+</div>
+
+<!-- SEO AUDIT -->
+<div class="page" id="page-audit">
+  <div class="card">
+    <div class="card-title">🔬 SEO Audit</div>
+    <div class="form-grid">
+      <div class="form-group"><label>Website URL *</label><input id="au-url" placeholder="https://yourwebsite.com"/></div>
+      <div class="form-group"><label>Business Type *</label><input id="au-type" placeholder="e.g. SaaS, E-commerce"/></div>
+      <div class="form-group"><label>SEO Goals</label><input id="au-goals" value="Increase organic traffic and rankings"/></div>
+      <div class="form-group"><label>Known Issues</label><input id="au-issues" placeholder="e.g. slow page speed"/></div>
+    </div>
+    <div class="btn-group"><button class="btn btn-primary" onclick="runTask('audit')">🔬 Run SEO Audit</button></div>
+  </div>
+  <div class="loading" id="loading-audit"><div class="spinner"></div><div class="loading-text">Auditing your SEO…</div></div>
+  <div class="result-area" id="result-audit"><div class="card"><div class="result-header"><span>✅ Audit Complete</span><button class="btn btn-secondary" onclick="copyResult('audit')" style="width:auto;padding:6px 14px;font-size:11px">📋 Copy</button></div><div class="result-box" id="res-audit"></div></div></div>
+</div>
+
+<!-- SOCIAL MEDIA -->
+<div class="page" id="page-social">
+  <div class="card">
+    <div class="card-title">📱 Social Media Marketing</div>
+    <div class="form-grid">
+      <div class="form-group"><label>Task Type *</label><select id="sm-task"><option>Full 30-Day Content Calendar</option><option>Platform-Specific Posts (10 posts)</option><option>Hashtag Strategy</option><option>Viral Content Ideas</option><option>Bio & Profile Optimization</option><option>Paid Social Ad Copy</option></select></div>
+      <div class="form-group"><label>Brand *</label><input id="sm-brand" value="eLensAI"/></div>
+      <div class="form-group"><label>Industry *</label><input id="sm-industry" placeholder="e.g. AI Photography SaaS"/></div>
+      <div class="form-group"><label>Target Audience</label><input id="sm-audience" placeholder="e.g. Photographers, creatives"/></div>
+      <div class="form-group"><label>Platforms</label><input id="sm-platforms" value="Instagram, LinkedIn, Twitter"/></div>
+      <div class="form-group"><label>Brand Voice</label><input id="sm-voice" value="Professional yet engaging"/></div>
+    </div>
+    <div class="btn-group"><button class="btn btn-primary" onclick="runTask('social')">📱 Generate Social Content</button></div>
+  </div>
+  <div class="loading" id="loading-social"><div class="spinner"></div><div class="loading-text">Building social strategy…</div></div>
+  <div class="result-area" id="result-social"><div class="card"><div class="result-header"><span>✅ Social Plan Ready</span><button class="btn btn-secondary" onclick="copyResult('social')" style="width:auto;padding:6px 14px;font-size:11px">📋 Copy</button></div><div class="result-box" id="res-social"></div></div></div>
+</div>
+
+<!-- EMAIL MARKETING -->
+<div class="page" id="page-email">
+  <div class="card">
+    <div class="card-title">📧 Email Marketing</div>
+    <div class="form-grid">
+      <div class="form-group"><label>Email Type *</label><select id="em-type"><option>Newsletter</option><option>Promotional / Sales</option><option>Welcome Sequence (5 emails)</option><option>Drip Campaign (7 emails)</option><option>Cart Abandonment</option><option>Re-engagement</option><option>Product Launch</option></select></div>
+      <div class="form-group"><label>Brand *</label><input id="em-brand" value="eLensAI"/></div>
+      <div class="form-group"><label>Product / Service *</label><input id="em-product" placeholder="e.g. AI Photo Editing Platform"/></div>
+      <div class="form-group"><label>Audience Segment</label><input id="em-audience" placeholder="e.g. Free trial users"/></div>
+      <div class="form-group"><label>Campaign Goal</label><input id="em-goal" value="Drive conversions and nurture leads"/></div>
+      <div class="form-group"><label>Offer / CTA</label><input id="em-offer" placeholder="e.g. 30% off — limited time"/></div>
+    </div>
+    <div class="btn-group"><button class="btn btn-primary" onclick="runTask('email')">📧 Create Campaign</button></div>
+  </div>
+  <div class="loading" id="loading-email"><div class="spinner"></div><div class="loading-text">Crafting email campaign…</div></div>
+  <div class="result-area" id="result-email"><div class="card"><div class="result-header"><span>✅ Email Campaign Ready</span><button class="btn btn-secondary" onclick="copyResult('email')" style="width:auto;padding:6px 14px;font-size:11px">📋 Copy</button></div><div class="result-box" id="res-email"></div></div></div>
+</div>
+
+<!-- COMPETITOR ANALYSIS -->
+<div class="page" id="page-competitor">
+  <div class="card">
+    <div class="card-title">🕵️ Competitor Analysis</div>
+    <div class="form-grid">
+      <div class="form-group"><label>Your Brand *</label><input id="ca-brand" value="eLensAI"/></div>
+      <div class="form-group"><label>Industry *</label><input id="ca-industry" placeholder="e.g. AI Photography SaaS"/></div>
+      <div class="form-group"><label>Competitors *</label><input id="ca-comp" placeholder="competitor1.com, competitor2.com"/></div>
+      <div class="form-group"><label>Focus</label><select id="ca-focus"><option>All (SEO + Content + Social + PPC)</option><option>SEO Only</option><option>Content Strategy</option><option>Social Media</option><option>Paid Ads</option></select></div>
+    </div>
+    <div class="btn-group"><button class="btn btn-primary" onclick="runTask('competitor')">🕵️ Analyze Competitors</button></div>
+  </div>
+  <div class="loading" id="loading-competitor"><div class="spinner"></div><div class="loading-text">Analyzing competitors…</div></div>
+  <div class="result-area" id="result-competitor"><div class="card"><div class="result-header"><span>✅ Analysis Complete</span><button class="btn btn-secondary" onclick="copyResult('competitor')" style="width:auto;padding:6px 14px;font-size:11px">📋 Copy</button></div><div class="result-box" id="res-competitor"></div></div></div>
+</div>
+
+<!-- TRENDS -->
+<div class="page" id="page-trends">
+  <div class="card">
+    <div class="card-title">📈 Latest Trends</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Get an intelligence briefing on the latest SEO & digital marketing trends.</p>
+    <div class="trend-chips">
+      <div class="chip active" onclick="pickChip(this,'All')">🌐 All</div>
+      <div class="chip" onclick="pickChip(this,'SEO')">🔍 SEO</div>
+      <div class="chip" onclick="pickChip(this,'Content')">✍️ Content</div>
+      <div class="chip" onclick="pickChip(this,'Social Media')">📱 Social</div>
+      <div class="chip" onclick="pickChip(this,'PPC')">💰 PPC</div>
+      <div class="chip" onclick="pickChip(this,'AI in Marketing')">🤖 AI</div>
+    </div>
+    <input type="hidden" id="trend-focus" value="All"/>
+    <div class="btn-group"><button class="btn btn-primary" onclick="runTask('trends')">📈 Get Latest Trends</button></div>
+  </div>
+  <div class="loading" id="loading-trends"><div class="spinner"></div><div class="loading-text">Analyzing trends…</div></div>
+  <div class="result-area" id="result-trends"><div class="card"><div class="result-header"><span>✅ Trends Report</span><button class="btn btn-secondary" onclick="copyResult('trends')" style="width:auto;padding:6px 14px;font-size:11px">📋 Copy</button></div><div class="result-box" id="res-trends"></div></div></div>
+</div>
+
+<!-- PPC -->
+<div class="page" id="page-ppc">
+  <div class="card">
+    <div class="card-title">💰 PPC & Paid Ads</div>
+    <div class="form-grid">
+      <div class="form-group"><label>Ad Platform *</label><select id="ppc-platform"><option>Google Ads</option><option>Meta Ads (Facebook + Instagram)</option><option>LinkedIn Ads</option><option>TikTok Ads</option><option>Multi-platform</option></select></div>
+      <div class="form-group"><label>Brand *</label><input id="ppc-brand" value="eLensAI"/></div>
+      <div class="form-group"><label>Product / Service *</label><input id="ppc-product" placeholder="e.g. AI Photo Editing Platform"/></div>
+      <div class="form-group"><label>Monthly Budget</label><input id="ppc-budget" value="$1,000"/></div>
+      <div class="form-group"><label>Campaign Goal</label><select id="ppc-goal"><option>Lead Generation</option><option>E-commerce Sales</option><option>Brand Awareness</option><option>App Installs</option><option>Website Traffic</option></select></div>
+      <div class="form-group"><label>Target Audience</label><input id="ppc-audience" placeholder="e.g. Photographers aged 25–45"/></div>
+    </div>
+    <div class="btn-group"><button class="btn btn-primary" onclick="runTask('ppc')">💰 Build PPC Strategy</button></div>
+  </div>
+  <div class="loading" id="loading-ppc"><div class="spinner"></div><div class="loading-text">Building PPC strategy…</div></div>
+  <div class="result-area" id="result-ppc"><div class="card"><div class="result-header"><span>✅ PPC Strategy Ready</span><button class="btn btn-secondary" onclick="copyResult('ppc')" style="width:auto;padding:6px 14px;font-size:11px">📋 Copy</button></div><div class="result-box" id="res-ppc"></div></div></div>
+</div>
+
+<!-- LOCAL SEO -->
+<div class="page" id="page-local">
+  <div class="card">
+    <div class="card-title">📍 Local SEO</div>
+    <div class="form-grid">
+      <div class="form-group"><label>Business Name *</label><input id="lo-name" placeholder="Your Business Name"/></div>
+      <div class="form-group"><label>City / Location *</label><input id="lo-city" placeholder="e.g. Mumbai, India"/></div>
+      <div class="form-group"><label>Business Category *</label><input id="lo-cat" placeholder="e.g. Photography Studio"/></div>
+      <div class="form-group"><label>Service Radius</label><input id="lo-radius" value="25 km"/></div>
+    </div>
+    <div class="btn-group"><button class="btn btn-primary" onclick="runTask('local')">📍 Build Local SEO Plan</button></div>
+  </div>
+  <div class="loading" id="loading-local"><div class="spinner"></div><div class="loading-text">Building local SEO plan…</div></div>
+  <div class="result-area" id="result-local"><div class="card"><div class="result-header"><span>✅ Local SEO Plan</span><button class="btn btn-secondary" onclick="copyResult('local')" style="width:auto;padding:6px 14px;font-size:11px">📋 Copy</button></div><div class="result-box" id="res-local"></div></div></div>
+</div>
+
+<!-- MONTHLY REPORT -->
+<div class="page" id="page-report">
+  <div class="card">
+    <div class="card-title">📊 Monthly Report</div>
+    <div class="form-grid">
+      <div class="form-group"><label>Brand *</label><input id="rp-brand" value="eLensAI"/></div>
+      <div class="form-group"><label>Reporting Month</label><input id="rp-month"/></div>
+      <div class="form-group"><label>Active Channels</label><input id="rp-channels" value="SEO, Social Media, Email"/></div>
+      <div class="form-group"><label>Monthly Goals</label><input id="rp-goals" value="Increase organic traffic and brand awareness"/></div>
+    </div>
+    <div class="form-group" style="margin-top:12px"><label>Key Metrics Achieved</label><textarea id="rp-metrics" placeholder="e.g. Organic traffic +20%, 15 new leads, 3 keywords ranked page 1…"></textarea></div>
+    <div class="btn-group"><button class="btn btn-primary" onclick="runTask('report')">📊 Generate Report</button></div>
+  </div>
+  <div class="loading" id="loading-report"><div class="spinner"></div><div class="loading-text">Generating report…</div></div>
+  <div class="result-area" id="result-report"><div class="card"><div class="result-header"><span>✅ Report Ready</span><button class="btn btn-secondary" onclick="copyResult('report')" style="width:auto;padding:6px 14px;font-size:11px">📋 Copy</button></div><div class="result-box" id="res-report"></div></div></div>
+</div>
+
+<!-- CUSTOM TASK -->
+<div class="page" id="page-custom">
+  <div class="card">
+    <div class="card-title">🛠️ Custom Task</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Describe any SEO or digital marketing task.</p>
+    <div class="form-group"><label>Your Task *</label><textarea id="cu-task" style="min-height:140px" placeholder="Examples:&#10;• Write a link-building outreach strategy&#10;• Create a content brief for a comparison article&#10;• Build a 6-month SEO roadmap&#10;• Write 10 Instagram ad creatives for Black Friday"></textarea></div>
+    <div class="btn-group"><button class="btn btn-primary" onclick="runTask('custom')">🛠️ Execute Task</button></div>
+  </div>
+  <div class="loading" id="loading-custom"><div class="spinner"></div><div class="loading-text">Working on your task…</div></div>
+  <div class="result-area" id="result-custom"><div class="card"><div class="result-header"><span>✅ Task Complete</span><button class="btn btn-secondary" onclick="copyResult('custom')" style="width:auto;padding:6px 14px;font-size:11px">📋 Copy</button></div><div class="result-box" id="res-custom"></div></div></div>
+</div>
+
+</div><!-- /content -->
+</div><!-- /main -->
+
+<!-- ═══ BOTTOM TAB BAR (MOBILE) ═══ -->
+<div class="bottombar">
+  <button class="tab-btn active" onclick="go('home')" id="tab-home"><span class="tab-icon">🏠</span>Home</button>
+  <button class="tab-btn" onclick="go('keywords')" id="tab-keywords"><span class="tab-icon">🔍</span>Keywords</button>
+  <button class="tab-btn" onclick="go('content')" id="tab-content"><span class="tab-icon">✍️</span>Content</button>
+  <button class="tab-btn" onclick="go('social')" id="tab-social"><span class="tab-icon">📱</span>Social</button>
+  <button class="tab-btn" onclick="go('trends')" id="tab-trends"><span class="tab-icon">📈</span>Trends</button>
+</div>
+
+<!-- ═══ INSTALL BANNER ═══ -->
+<div class="install-banner" id="installBanner">
+  <p>📲 <strong>Install as App</strong> — Add to your home screen for quick access!</p>
+  <button class="btn btn-primary" onclick="installApp()">Install</button>
+  <button class="dismiss" onclick="dismissInstall()">✕</button>
+</div>
+
+<script>
+const MODEL='openai/gpt-oss-120b';
+const MONTH=new Date().toLocaleString('default',{month:'long',year:'numeric'});
+const el=id=>document.getElementById(id);
+if(el('rp-month'))el('rp-month').value=MONTH;
+
+// ── NAVIGATION ──
+const PAGES=['home','keywords','content','audit','social','email','competitor','trends','ppc','local','report','custom'];
+let currentPage='home';
+
+function go(id){
+  currentPage=id;
+  PAGES.forEach(p=>{
+    const pg=el('page-'+p);if(pg)pg.classList.toggle('active',p===id);
+    const nv=el('nav-'+p);if(nv)nv.classList.toggle('active',p===id);
+    const tb=el('tab-'+p);if(tb)tb.classList.toggle('active',p===id);
+  });
+  // close sidebar on mobile
+  if(window.innerWidth<769)toggleSidebar(false);
+  // scroll to top
+  document.querySelector('.main').scrollTop=0;
+}
+
+// ── SIDEBAR ──
+let sidebarOpen=false;
+function toggleSidebar(force){
+  sidebarOpen=force!==undefined?force:!sidebarOpen;
+  el('sidebar').classList.toggle('open',sidebarOpen);
+  el('overlay').classList.toggle('open',sidebarOpen);
+}
+
+// ── TREND CHIPS ──
+function pickChip(chip,val){
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active');
+  el('trend-focus').value=val;
+}
+
+// ── PROMPT BUILDER ──
+function g(id){return(el(id)||{}).value||'';}
+function buildPrompt(task){
+  const prompts={
+    keywords:`Perform comprehensive keyword research:\n- Topic: ${g('kw-topic')}\n- Niche: ${g('kw-niche')}\n- Audience: ${g('kw-audience')}\n- Region: ${g('kw-region')}\n- Language: ${g('kw-lang')}\n- Competitors: ${g('kw-comp')||'N/A'}\n- Date: ${MONTH}\n\n## 1. PRIMARY KEYWORDS (15)\nKeyword|Intent|Volume|Difficulty|CPC|Priority\n## 2. LONG-TAIL (20)\n## 3. LSI & SEMANTIC (15)\n## 4. QUESTION KEYWORDS (10)\n## 5. NEGATIVE KEYWORDS\n## 6. COMPETITOR GAPS\n## 7. CLUSTERS & PILLARS\n## 8. 90-DAY PLAN`,
+    content:`Create SEO-optimized content:\nType: ${g('ct-type')}\nKeyword: ${g('ct-keyword')}\nTopic: ${g('ct-topic')}\nBrand: ${g('ct-brand')}\nTone: ${g('ct-tone')}\nWord Count: ${g('ct-wordcount')}\nNotes: ${g('ct-notes')||'None'}\nDate: ${MONTH}\n\nRequirements:\n- 1-2% keyword density\n- Semantic/LSI keywords\n- Human-like E-E-A-T prose\n- Meta title (≤60 chars) & description (≤160 chars)\n- Internal linking suggestions\n- CTAs\n- SEO checklist at end`,
+    audit:`SEO audit for:\nWebsite: ${g('au-url')}\nBusiness: ${g('au-type')}\nGoals: ${g('au-goals')}\nIssues: ${g('au-issues')||'None'}\nDate: ${MONTH}\n\n## 1. TECHNICAL SEO (✅/⚠️/❌)\n## 2. ON-PAGE SEO\n## 3. OFF-PAGE SEO\n## 4. CONTENT AUDIT\n## 5. PRIORITY ACTIONS (🔴/🟡/🟢)\n## 6. 90-DAY ROADMAP\n## 7. TRACKING SETUP`,
+    social:`Social media plan:\nTask: ${g('sm-task')}\nBrand: ${g('sm-brand')}\nIndustry: ${g('sm-industry')}\nAudience: ${g('sm-audience')}\nPlatforms: ${g('sm-platforms')}\nVoice: ${g('sm-voice')}\nDate: ${MONTH}\n\n## PLATFORM STRATEGY\n## CONTENT MIX\n## POSTING SCHEDULE\n## 30-DAY CALENDAR (Date|Platform|Caption|Hashtags|CTA|Visual)\n## HASHTAG STRATEGY\n## ENGAGEMENT TACTICS\n## KPIs`,
+    email:`Email campaign:\nType: ${g('em-type')}\nBrand: ${g('em-brand')}\nProduct: ${g('em-product')}\nAudience: ${g('em-audience')}\nGoal: ${g('em-goal')}\nOffer: ${g('em-offer')||'N/A'}\nDate: ${MONTH}\n\n## SUBJECT LINES (10)\n## PREVIEW TEXT (5)\n## EMAIL BODY (3 versions: short/story/value)\n## A/B TESTING\n## DELIVERABILITY\n## FOLLOW-UP SEQUENCE (3)`,
+    competitor:`Competitor analysis:\nBrand: ${g('ca-brand')}\nIndustry: ${g('ca-industry')}\nCompetitors: ${g('ca-comp')}\nFocus: ${g('ca-focus')}\nDate: ${MONTH}\n\n## SEO COMPARISON\n## CONTENT ANALYSIS\n## SOCIAL PRESENCE\n## PAID ADS\n## KEYWORD GAPS\n## BACKLINK OPPORTUNITIES\n## WEAKNESSES\n## DIFFERENTIATION\n## BATTLE PLAN`,
+    trends:`${MONTH} industry report:\nFocus: ${g('trend-focus')}\n\n## GOOGLE ALGORITHM UPDATES\n## TOP SEO TRENDS\n## DIGITAL MARKETING TRENDS\n## PLATFORM UPDATES\n## EMERGING OPPORTUNITIES\n## WHAT TO STOP DOING\n## TOOLS TO ADOPT\n## 30/60/90-DAY ACTIONS`,
+    ppc:`PPC strategy:\nPlatform: ${g('ppc-platform')}\nBrand: ${g('ppc-brand')}\nProduct: ${g('ppc-product')}\nBudget: ${g('ppc-budget')}/mo\nGoal: ${g('ppc-goal')}\nAudience: ${g('ppc-audience')}\nDate: ${MONTH}\n\n## CAMPAIGN STRUCTURE\n## TARGETING\n## KEYWORDS & MATCH TYPES\n## AD COPY (5 ads)\n## LANDING PAGE\n## BIDDING STRATEGY\n## RETARGETING\n## BUDGET ALLOCATION\n## KPIs\n## OPTIMIZATION SCHEDULE`,
+    local:`Local SEO for:\nBusiness: ${g('lo-name')}\nLocation: ${g('lo-city')}\nCategory: ${g('lo-cat')}\nRadius: ${g('lo-radius')}\nDate: ${MONTH}\n\n## GOOGLE BUSINESS PROFILE\n## LOCAL KEYWORDS\n## LOCAL CONTENT\n## LINK BUILDING\n## CITATIONS (top 20)\n## REVIEW MANAGEMENT\n## LOCAL SCHEMA (JSON-LD)\n## RANKING FACTORS\n## 90-DAY PLAN`,
+    report:`Monthly marketing report:\nBrand: ${g('rp-brand')}\nMonth: ${g('rp-month')}\nChannels: ${g('rp-channels')}\nGoals: ${g('rp-goals')}\nMetrics: ${g('rp-metrics')||'Template with placeholder data'}\n\n## EXECUTIVE SUMMARY\n## PERFORMANCE DASHBOARD\n## SEO PERFORMANCE\n## SOCIAL MEDIA\n## EMAIL MARKETING\n## PAID ADS\n## WINS 🏆\n## CHALLENGES\n## COMPETITOR ACTIVITY\n## NEXT MONTH PLAN\n## RECOMMENDATIONS`,
+    custom:g('cu-task')
+  };
+  return prompts[task]||'';
+}
+
+const SYSTEMS={
+  keywords:"You are a world-class SEO keyword research specialist with 15+ years of experience.",
+  content:"You are an elite SEO content strategist and copywriter who creates content that ranks page 1 and converts.",
+  audit:"You are a senior technical SEO consultant who has audited thousands of websites.",
+  social:"You are a top social media strategist who has grown brands to millions of followers.",
+  email:"You are a direct-response email marketing expert with 40%+ open rates.",
+  competitor:"You are a competitive intelligence expert in digital marketing.",
+  trends:"You are a leading digital marketing industry analyst tracking every algorithm change and trend.",
+  ppc:"You are a certified PPC expert managing $10M+ in annual ad spend.",
+  local:"You are a local SEO specialist who helps businesses dominate local search.",
+  report:"You are a digital marketing director who creates board-level reports.",
+  custom:"You are an expert digital marketing agency. Deliver professional, actionable output."
+};
+
+const results={};
+
+// ── API CALLER ──
+async function runTask(task){
+  const apiKey=el('apiKey').value.trim();
+  if(!apiKey){alert('⚠️ Enter your Groq API key first');return;}
+  const prompt=buildPrompt(task);
+  if(!prompt||prompt.length<10){alert('⚠️ Fill in the required fields');return;}
+
+  const resultId=task==='content'?'result-content-area':'result-'+task;
+  const loadEl=el('loading-'+task);
+  const resEl=el(resultId);
+  const boxEl=el('res-'+task);
+
+  loadEl.classList.add('visible');
+  if(resEl)resEl.classList.remove('visible');
+  // disable all buttons on this page
+  const btns=document.querySelectorAll(`#page-${task} .btn-primary`);
+  btns.forEach(b=>{b.disabled=true;b.dataset.orig=b.innerHTML;b.innerHTML='⏳ Processing…'});
+
+  try{
+    const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+      method:'POST',
+      headers:{'Authorization':'Bearer '+apiKey,'Content-Type':'application/json'},
+      body:JSON.stringify({model:MODEL,max_tokens:8192,messages:[{role:'system',content:SYSTEMS[task]||SYSTEMS.custom},{role:'user',content:prompt}]})
+    });
+    if(!r.ok){const e=await r.json();throw new Error(e.error?.message||'HTTP '+r.status);}
+    const data=await r.json();
+    const text=data.choices?.[0]?.message?.content||'No response received.';
+    results[task]=text;
+    boxEl.innerHTML=fmtMd(text);
+    resEl.classList.add('visible');
+    resEl.scrollIntoView({behavior:'smooth',block:'start'});
+  }catch(e){
+    let m=e.message;
+    if(m.includes('401'))m='Invalid API key. Regenerate at console.groq.com/keys';
+    if(m.includes('429'))m='Rate limit hit. Please wait and try again.';
+    alert('❌ '+m);
+  }finally{
+    loadEl.classList.remove('visible');
+    btns.forEach(b=>{b.disabled=false;b.innerHTML=b.dataset.orig});
+  }
+}
+
+// ── MARKDOWN FORMATTER ──
+function fmtMd(t){
+  return t
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/^### (.+)$/gm,'<h3>$1</h3>')
+    .replace(/^## (.+)$/gm,'<h2 style="border-bottom:1px solid #30363d;padding-bottom:4px">$1</h2>')
+    .replace(/^# (.+)$/gm,'<h1 style="font-size:17px">$1</h1>')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em style="color:#cdd9e5">$1</em>')
+    .replace(/`(.+?)`/g,'<code style="background:#2d333b;padding:2px 5px;border-radius:4px;font-size:12px">$1</code>')
+    .replace(/^\- (.+)$/gm,'<div style="padding:2px 0 2px 14px;border-left:2px solid #30363d;margin:2px 0">• $1</div>')
+    .replace(/✅/g,'<span style="color:#3fb950">✅</span>')
+    .replace(/⚠️/g,'<span style="color:#d29922">⚠️</span>')
+    .replace(/❌/g,'<span style="color:#f85149">❌</span>')
+    .replace(/🔴/g,'<span style="color:#f85149">🔴</span>')
+    .replace(/🟡/g,'<span style="color:#d29922">🟡</span>')
+    .replace(/🟢/g,'<span style="color:#3fb950">🟢</span>')
+    .replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+}
+
+// ── COPY ──
+function copyResult(task){
+  const t=results[task]||'';if(!t)return;
+  navigator.clipboard.writeText(t).then(()=>{
+    const b=event.target;const o=b.textContent;
+    b.textContent='✅ Copied!';setTimeout(()=>b.textContent=o,1500);
+  });
+}
+
+// ── PWA INSTALL ──
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();deferredPrompt=e;
+  el('installBanner').classList.add('visible');
+});
+function installApp(){
+  if(!deferredPrompt)return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(()=>{deferredPrompt=null;dismissInstall();});
+}
+function dismissInstall(){el('installBanner').classList.remove('visible');}
+
+// ── SWIPE TO OPEN SIDEBAR (MOBILE) ──
+let touchStartX=0;
+document.addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX;},{passive:true});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-touchStartX;
+  if(touchStartX<30&&dx>60&&!sidebarOpen)toggleSidebar(true);
+  if(sidebarOpen&&dx<-60)toggleSidebar(false);
+},{passive:true});
+
+// ════════════════════════════════════════════════════
+//  🔐  AUTHENTICATION SYSTEM  (PBKDF2 + localStorage)
+// ════════════════════════════════════════════════════
+const DB_KEY   = 'seoa_users_v1';
+const SESS_KEY = 'seoa_session_v1';
+const SESSION_HOURS = 24;
+
+// ── Crypto helpers ──
+async function hashPassword(password, salt){
+  const enc = new TextEncoder();
+  const keyMat = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveBits']);
+  const bits = await crypto.subtle.deriveBits(
+    {name:'PBKDF2', salt:enc.encode(salt), iterations:150000, hash:'SHA-256'},
+    keyMat, 256
+  );
+  return btoa(String.fromCharCode(...new Uint8Array(bits)));
+}
+function makeSalt(){
+  const arr = new Uint8Array(16);
+  crypto.getRandomValues(arr);
+  return btoa(String.fromCharCode(...arr));
+}
+function genToken(){
+  const arr = new Uint8Array(32);
+  crypto.getRandomValues(arr);
+  return Array.from(arr,b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+// ── User store ──
+function getUsers(){ try{return JSON.parse(localStorage.getItem(DB_KEY)||'{}')}catch{return{}} }
+function saveUsers(u){ localStorage.setItem(DB_KEY, JSON.stringify(u)); }
+function getSession(){ try{return JSON.parse(localStorage.getItem(SESS_KEY)||'null')}catch{return null} }
+function saveSession(s){ localStorage.setItem(SESS_KEY, JSON.stringify(s)); }
+function clearSession(){ localStorage.removeItem(SESS_KEY); }
+
+// ── Auth UI helpers ──
+function showAuthMsg(type, msg){
+  const err=el('auth-msg-error'), suc=el('auth-msg-success');
+  err.style.display='none'; suc.style.display='none';
+  if(type==='error'){err.textContent=msg; err.style.display='block';}
+  else{suc.textContent=msg; suc.style.display='block';}
+}
+function clearAuthMsg(){ el('auth-msg-error').style.display='none'; el('auth-msg-success').style.display='none'; }
+function switchTab(tab){
+  clearAuthMsg();
+  document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',['login','signup','reset'][i]===tab));
+  document.querySelectorAll('.auth-form').forEach(f=>f.classList.remove('active'));
+  el('form-'+tab).classList.add('active');
+}
+function showReset(){ switchTab('reset'); }
+function togglePw(id, btn){
+  const inp=el(id);
+  if(inp.type==='password'){inp.type='text'; btn.textContent='🔒';}
+  else{inp.type='password'; btn.textContent='👁';}
+}
+function toggleUserMenu(){
+  el('user-menu').classList.toggle('open');
+}
+document.addEventListener('click', e=>{
+  if(!e.target.closest('.user-wrap')) el('user-menu')?.classList.remove('open');
+});
+
+// ── Password strength ──
+function checkStrength(pw){
+  el('pw-reqs').style.display='block';
+  const reqs=[
+    {id:'req-len',   test:pw.length>=8},
+    {id:'req-upper', test:/[A-Z]/.test(pw)},
+    {id:'req-num',   test:/[0-9]/.test(pw)},
+    {id:'req-special',test:/[^A-Za-z0-9]/.test(pw)},
+  ];
+  let score=0;
+  reqs.forEach(r=>{
+    const node=el(r.id);
+    if(r.test){node.classList.add('met');node.querySelector('.dot').textContent='●';score++;}
+    else{node.classList.remove('met');node.querySelector('.dot').textContent='○';}
+  });
+  const fill=el('strength-fill'), txt=el('strength-text');
+  const pct=[0,25,50,75,100][score];
+  const colors=['','#ef4444','#f97316','#eab308','#3fb950'];
+  const labels=['','Weak','Fair','Good','Strong'];
+  fill.style.width=pct+'%'; fill.style.background=colors[score];
+  txt.textContent=score>0?labels[score]:''; txt.style.color=colors[score];
+}
+
+// ── SIGN UP ──
+async function doSignup(e){
+  e.preventDefault(); clearAuthMsg();
+  const name=el('signup-name').value.trim();
+  const email=el('signup-email').value.trim().toLowerCase();
+  const pw=el('signup-pw').value;
+  const pw2=el('signup-pw2').value;
+  const btn=el('signup-btn');
+
+  if(pw!==pw2){ showAuthMsg('error','Passwords do not match.'); return; }
+  if(pw.length<8){ showAuthMsg('error','Password must be at least 8 characters.'); return; }
+  if(!/[A-Z]/.test(pw)){ showAuthMsg('error','Password must contain at least one uppercase letter.'); return; }
+  if(!/[0-9]/.test(pw)){ showAuthMsg('error','Password must contain at least one number.'); return; }
+  if(!/[^A-Za-z0-9]/.test(pw)){ showAuthMsg('error','Password must contain at least one special character.'); return; }
+
+  const users=getUsers();
+  if(users[email]){ showAuthMsg('error','An account with this email already exists.'); return; }
+
+  btn.disabled=true; btn.textContent='⏳ Creating account…';
+  try{
+    const salt=makeSalt();
+    const hash=await hashPassword(pw, salt);
+    users[email]={name, email, salt, hash, createdAt:Date.now()};
+    saveUsers(users);
+    showAuthMsg('success','✅ Account created! Signing you in…');
+    setTimeout(()=>startSession(users[email], false), 800);
+  }catch(err){
+    showAuthMsg('error','Error creating account. Try again.');
+  }finally{
+    btn.disabled=false; btn.innerHTML='🚀 Create Account';
+  }
+}
+
+// ── LOGIN ──
+async function doLogin(e){
+  e.preventDefault(); clearAuthMsg();
+  const email=el('login-email').value.trim().toLowerCase();
+  const pw=el('login-pw').value;
+  const remember=el('remember-me').checked;
+  const btn=el('login-btn');
+
+  const users=getUsers();
+  if(!users[email]){ showAuthMsg('error','No account found with this email.'); return; }
+
+  btn.disabled=true; btn.textContent='⏳ Signing in…';
+  try{
+    const {salt, hash, name}=users[email];
+    const attempt=await hashPassword(pw, salt);
+    if(attempt!==hash){ showAuthMsg('error','Incorrect password. Please try again.'); return; }
+    startSession(users[email], remember);
+  }catch(err){
+    showAuthMsg('error','Sign in error. Please try again.');
+  }finally{
+    btn.disabled=false; btn.innerHTML='🔐 Sign In';
+  }
+}
+
+// ── RESET (local recovery) ──
+function doReset(e){
+  e.preventDefault();
+  const email=el('reset-email').value.trim().toLowerCase();
+  const users=getUsers();
+  if(!users[email]){ showAuthMsg('error','No account found with this email.'); return; }
+  showAuthMsg('success', `Account exists for ${users[email].name}. Please try your password, or create a new account.`);
+}
+
+// ── SESSION MANAGEMENT ──
+function startSession(user, remember){
+  const session={
+    email:user.email, name:user.name,
+    token:genToken(),
+    expires: remember ? Date.now()+(SESSION_HOURS*24*60*60*1000) : Date.now()+(SESSION_HOURS*60*60*1000)
+  };
+  saveSession(session);
+  mountApp(session);
+}
+
+function mountApp(session){
+  // Hide auth, show app
+  el('auth-screen').classList.add('hidden');
+  // Update topnav user badge
+  const initials=session.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  el('user-avatar').textContent=initials;
+  el('user-name-badge').textContent=session.name.split(' ')[0];
+  el('user-wrap').style.display='flex';
+  el('top-model-badge').style.display='none'; // hidden on mobile, shown on desktop
+  el('menu-name').textContent=session.name;
+  el('menu-email').textContent=session.email;
+  el('sidebar-uname').textContent=session.name;
+}
+
+function doLogout(){
+  clearSession();
+  el('auth-screen').classList.remove('hidden');
+  el('user-wrap').style.display='none';
+  el('user-menu').classList.remove('open');
+  el('login-pw').value='';
+  clearAuthMsg();
+  switchTab('login');
+  toggleSidebar(false);
+}
+
+function goProfile(){
+  el('user-menu').classList.remove('open');
+  const s=getSession();
+  if(!s)return;
+  alert(`👤 Profile\n\nName: ${s.name}\nEmail: ${s.email}\n\nSession expires: ${new Date(s.expires).toLocaleString()}`);
+}
+
+// ── BOOT: check existing session ──
+(function checkAuth(){
+  const session=getSession();
+  if(session && session.expires > Date.now()){
+    mountApp(session);
+  }
+  // else: auth screen is already visible by default
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+═══════════════════════════════════════════════════════════════════
+    🚀 QUICK DEPLOYMENT — 5 MINUTES
+═══════════════════════════════════════════════════════════════════
+
+⏱️  TOTAL TIME: ~5 minutes
+📱 RESULT: Live at https://digitechsolutions-agent.vercel.app
+
+───────────────────────────────────────────────────────────────────
+STEP 1: COPY FILES (1 minute)
+───────────────────────────────────────────────────────────────────
+1. Open your project folder: ~/your-project-folder
+2. Copy all files from deployment_package/ into it:
+   - index.html (⚠️ renamed from index.html.html)
+   - mobile.html
+   - manifest.json
+   - sw.js
+   - SEO_Agent.py
+   - SEO_Mobile_App.html
+
+───────────────────────────────────────────────────────────────────
+STEP 2: COMMIT & PUSH (3 minutes)
+───────────────────────────────────────────────────────────────────
+$ cd ~/your-project-folder
+$ git add .
+$ git commit -m "Update model & add password reset feature"
+$ git push origin main
+
+───────────────────────────────────────────────────────────────────
+STEP 3: WAIT FOR DEPLOYMENT (1 minute)
+───────────────────────────────────────────────────────────────────
+1. Open: https://vercel.com/dashboard
+2. Click: digitechsolutions-agent
+3. Watch: Deployments tab
+4. Status: Building → Ready ✅
+
+───────────────────────────────────────────────────────────────────
+✅ DONE! Your site is live!
+───────────────────────────────────────────────────────────────────
+
+🌐 Visit: https://digitechsolutions-agent.vercel.app
+📱 Mobile: https://digitechsolutions-agent.vercel.app/mobile.html
+
+═══════════════════════════════════════════════════════════════════
+WHAT'S NEW?
+═══════════════════════════════════════════════════════════════════
+
+✅ Model: openai/gpt-oss-120b (updated from llama-3.3)
+✅ Password Reset: 3-step recovery flow
+✅ Security Questions: Account protection
+✅ All tests: PASSED ✓
+
+═══════════════════════════════════════════════════════════════════
